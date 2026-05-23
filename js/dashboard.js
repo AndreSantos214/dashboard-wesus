@@ -280,6 +280,129 @@ const GreetingController = (() => {
 })();
 
 /* ══════════════════════════════════════════════════════════════
+   DYNAMIC PLASMA CHART ENGINE (Capacitor 60 FPS Approved)
+   ═══════════════════════════════════════════════════════════════ */
+const DynamicPlasmaChart = (() => {
+  const sampleData = {
+    months: ["Mês 1", "Mês 2", "Mês 3 (Vencimento)"],
+    values: [2000, 11500, 24500],
+    formattedTotal: "+ € 24.500,00",
+  };
+
+  function render(data) {
+    const svg = document.getElementById("dynamicPlasmaChart");
+    if (!svg) return;
+
+    const width = 1000;
+    const height = 200;
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+    const pointsCount = data.values.length;
+    if (pointsCount < 2) return;
+
+    const minVal = 0;
+    const maxVal = Math.max(...data.values) * 1.02;
+
+    // 🔥 DETECÇÃO DE BREAKPOINT NATIVO (lg = 1024px do Tailwind)
+    const isMobile = window.innerWidth < 1024;
+
+    // 1. Coordenadas X e Y da Curva (Rampa Otimizada e Responsiva)
+    const coords = data.values.map((val, index) => {
+      const x = (index / (pointsCount - 1)) * (width - 40) + 20;
+
+      let y;
+      if (isMobile) {
+        // No mobile, a linha pode subir ao máximo porque o tooltip vai para baixo
+        y = height - ((val - minVal) / (maxVal - minVal)) * (height - 20) - 6;
+      } else {
+        // No desktop, deixamos uma folga de ~25px no topo do contêiner para o tooltip respirar
+        y = height - ((val - minVal) / (maxVal - minVal)) * (height - 25) + 5;
+      }
+      return { x, y };
+    });
+
+    // 2. Construção da Curva Bézier Suave Única
+    let pathD = `M ${coords[0].x} ${coords[0].y}`;
+    for (let i = 0; i < coords.length - 1; i++) {
+      const p0 = coords[i];
+      const p1 = coords[i + 1];
+      const distX = p1.x - p0.x;
+
+      const cpX1 = p0.x + distX / 3;
+      const cpY1 = p0.y;
+      const cpX2 = p0.x + (2 * distX) / 3;
+      const cpY2 = p1.y;
+
+      pathD += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${p1.x} ${p1.y}`;
+    }
+
+    // 3. Aplicação do Caminho no Core do Gráfico
+    const coreLine = document.getElementById("chartCoreLine");
+    coreLine.setAttribute("d", pathD);
+
+    const pathLength = coreLine.getTotalLength();
+    coreLine.style.strokeDasharray = pathLength;
+    coreLine.style.strokeDashoffset = pathLength;
+
+    // 4. Fechamento Perfeito da Projeção do Sombreamento Inferior
+    const lastCoord = coords[coords.length - 1];
+    const firstCoord = coords[0];
+    const fillD = `${pathD} L ${lastCoord.x} ${height} L ${firstCoord.x} ${height} Z`;
+    document.getElementById("chartFillPath").setAttribute("d", fillD);
+
+    // 5. Posicionamento Estático do Nó Final
+    document.getElementById("chartFinalNode").setAttribute("cx", lastCoord.x);
+    document.getElementById("chartFinalNode").setAttribute("cy", lastCoord.y);
+
+    // 6. 🔥 ALINHAMENTO DINÂMICO DO TOOLTIP (60 FPS COMPOSITING)
+    const tooltip = document.getElementById("chartTooltip");
+    const tooltipValue = document.getElementById("tooltipValue");
+    if (tooltip && tooltipValue) {
+      tooltipValue.textContent = data.formattedTotal;
+      tooltip.classList.remove("hidden");
+
+      const container = document.getElementById("chartContainer");
+      const rect = container.getBoundingClientRect();
+
+      // Centralização horizontal perfeita no ponto final
+      const realX = (lastCoord.x / width) * rect.width - 95;
+
+      let realY;
+      if (isMobile) {
+        // 📱 No Mobile: Posiciona abaixo do ponto final (+15px de recuo)
+        realY = (lastCoord.y / height) * rect.height + 55;
+      } else {
+        // 💻 No Desktop: Posiciona acima do ponto final (-52px de recuo)
+        realY = (lastCoord.y / height) * rect.height - 60;
+      }
+
+      // Aplicação por matriz de transformação pura para manter os 60 FPS estáveis no Capacitor
+      tooltip.style.transform = `translate3d(${realX}px, ${realY}px, 0)`;
+    }
+
+    // 7. Renderização do Eixo X
+    const xAxis = document.getElementById("chartXAxis");
+    if (xAxis) {
+      xAxis.innerHTML = data.months
+        .map((month, idx) => {
+          const isLast = idx === data.months.length - 1;
+          return `<span class="${isLast ? "text-gold font-semibold" : ""}">${month}</span>`;
+        })
+        .join("");
+    }
+  }
+
+  function init() {
+    render(sampleData);
+    window.addEventListener("resize", () => {
+      requestAnimationFrame(() => render(sampleData));
+    });
+  }
+
+  return { init, render };
+})();
+
+/* ══════════════════════════════════════════════════════════════
    ENTRY POINT
 ═══════════════════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", () => {
@@ -290,6 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
   BalanceVisibility.init();
   AssetCardController.init();
   GreetingController.init();
+  DynamicPlasmaChart.init();
 
   // Log for development
   console.log("[It's Wesus] Dashboard v1.0 — Loaded");
