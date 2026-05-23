@@ -118,47 +118,6 @@ html.dark body {
   transition: var(--transition);
 }
 
-/* ── DESKTOP SIDEBAR ──────────────────────────────────────── */
-.sidebar {
-  background: rgba(7, 19, 38, 0.85);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  transition: var(--transition);
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.625rem 0.875rem;
-  border-radius: 0.875rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
-  text-decoration: none;
-  transition: all 200ms ease;
-  position: relative;
-}
-
-.nav-item:hover {
-  color: rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.nav-item.active {
-  color: var(--gold);
-  background: linear-gradient(90deg, rgba(197, 160, 89, 0.12), transparent);
-  border-left: 2px solid var(--gold);
-  padding-left: calc(0.875rem - 2px);
-}
-
-.nav-icon {
-  width: 1.125rem;
-  height: 1.125rem;
-  flex-shrink: 0;
-  stroke: currentColor;
-}
-
 .header-action-btn {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -471,30 +430,168 @@ html.dark body {
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* ── BOTTOM NAVIGATION (MOBILE) ───────────────────────────── */
+/* ── WRAPPER BACKLIGHTS (CALIBRAÇÃO INTENSA) ──────────────── */
+.widget-card-backlight {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(197, 160, 89, 0.25) 0%,
+    rgba(0, 163, 255, 0.15) 50%,
+    transparent 75%
+  );
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 0;
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+/* ── SIDEBAR RECALIBRADA (ANTI-SUBPIXEL BLEEDING) ── */
+.sidebar {
+  background-color: #071326 !important;
+  background-image:
+    linear-gradient(
+      180deg,
+      #071326 0%,
+      rgba(7, 19, 38, 1) 35%,
+      rgba(7, 19, 38, 0.75) 75%,
+      rgba(7, 19, 38, 1) 100%
+    ),
+    url("../img/sidebar-labyrinth.webp") !important;
+  background-size: 101% 101% !important;
+  background-position: center top !important;
+  background-repeat: no-repeat !important;
+  background-clip: padding-box !important;
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border-right: none !important;
+  box-shadow:
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.08),
+    12px 0 50px rgba(0, 0, 0, 0.6) !important;
+  transform: translateZ(0);
+}
+
+/* ── ITENS DE NAVEGAÇÃO DESKTOP ─────────────────────────── */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45) !important;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: color 250ms ease;
+  transform: translateZ(0);
+}
+
+.nav-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent);
+  opacity: 0;
+  transform: scaleX(0.8);
+  transform-origin: left;
+  transition:
+    transform 300ms cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 250ms ease;
+  z-index: 0;
+}
+
+.nav-item:hover {
+  color: #ffffff !important;
+}
+.nav-item:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* ── O BOTÃO "PLACA DE OURO ESCURO REFINED" (QUAD-GRADIENT) ── */
+.nav-item.active {
+  color: #fff2cc !important;
+  font-weight: 700 !important;
+  background: linear-gradient(
+    135deg,
+    #8f764b 0%,
+    #664e27 35%,
+    #a38349 70%,
+    #463722 100%
+  ) !important;
+  box-shadow:
+    0 8px 24px -4px rgba(70, 55, 34, 0.6),
+    inset 0 1.2px 1.2px rgba(255, 255, 255, 0.25),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(70, 55, 34, 0.5) !important;
+  padding-left: 1rem !important;
+}
+
+.nav-item.active .nav-icon {
+  stroke: #fff2cc !important;
+  stroke-width: 2.2 !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5)) !important;
+}
+
+.nav-item.active::after {
+  display: none !important;
+}
+
+.nav-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  transition: stroke 250ms ease;
+}
+
+/* ── BOTTOM NAVIGATION (MOBILE APPS FEEL - CORRIGIDO) ──────── */
 .bottom-nav {
-  background: rgba(7, 19, 38, 0.92);
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: rgba(7, 19, 38, 0.96) !important;
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
   padding-bottom: env(safe-area-inset-bottom);
-  transition: var(--transition);
+  transform: translateZ(0);
+}
+
+/* 🔥 BLINDAGEM DESKTOP: Mata a barra inferior em telas grandes, 
+   anulando o conflito com o !important anterior */
+@media (min-width: 1024px) {
+  .bottom-nav {
+    display: none !important;
+  }
 }
 
 .bottom-nav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 10px 8px;
-  color: rgba(255, 255, 255, 0.35);
-  text-decoration: none;
-  transition: all 200ms ease;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important; /* Cria o vão perfeito entre o ícone e o texto */
+  padding: 8px 4px !important;
+  color: rgba(255, 255, 255, 0.35) !important;
+  transition:
+    color 200ms ease,
+    transform 150ms ease;
   position: relative;
 }
 
+.bottom-nav-item:active {
+  transform: scale(0.92) translateZ(0); /* Feedback tátil nativo */
+}
+
 .bottom-nav-item.active {
-  color: var(--gold);
+  color: #e8d08d !important;
 }
 
 .bottom-nav-item.active::before {
@@ -503,28 +600,27 @@ html.dark body {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 24px;
-  height: 2px;
-  background: var(--gold);
-  border-radius: 0 0 2px 2px;
-}
-
-.bottom-nav-item:active {
-  transform: scale(0.9);
+  background: #e8d08d !important;
+  height: 2.5px !important;
+  width: 24px !important;
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 2px 8px rgba(232, 208, 141, 0.8);
 }
 
 .bottom-nav-icon {
   width: 20px;
   height: 20px;
   stroke: currentColor;
+  fill: none;
   flex-shrink: 0;
 }
 
 .bottom-nav-label {
   font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* ── UTILITIES ────────────────────────────────────────────── */
@@ -564,23 +660,3 @@ button {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
-
-/* Retroiluminação de Baixa Intensidade para Cards Menores (GPU Friendly) */
-.widget-card-backlight {
-  position: absolute;
-  inset: -12px; /* Margem de espalhamento controlada */
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(197, 160, 89, 0.14) 0%,
-    rgba(0, 163, 255, 0.08) 50%,
-    transparent 70%
-  );
-  filter: blur(22px);
-  pointer-events: none;
-  z-index: 0;
-  transform: translateZ(
-    0
-  ); /* Força isolamento de hardware nativo no Capacitor */
-  will-change: opacity;
-}
-

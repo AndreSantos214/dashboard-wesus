@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="css/input.css" />
 </head>
 
-<body class="font-inter bg-wesus text-white dark:bg-wesus dark:text-white light-mode overflow-hidden select-none">
+<body class="font-inter bg-wesus text-white dark:bg-wesus dark:text-white overflow-hidden select-none">
 
   <!-- ═══════════════════════════════════════════════════════
        AMBIENT GLOWS (background decoration)
@@ -129,19 +129,14 @@
           </header>
 
           <section aria-labelledby="patrimonyHeading" class="relative">
-
             <div class="hero-card-backlight" aria-hidden="true"></div>
 
             <div class="hero-card-crystal p-6 lg:p-8 flex flex-col justify-center relative z-10">
-
               <div class="absolute inset-0 bg-hero-circuits-refined opacity-75 pointer-events-none z-0" aria-hidden="true"></div>
-              <div class="hero-card-glow-premium opacity-50" aria-hidden="true"></div>
               <div class="crystal-base-glow" aria-hidden="true"></div>
 
               <div class="hidden lg:flex hero-logo-wrapper select-none">
-
                 <div class="hero-logo-glow" aria-hidden="true"></div>
-
                 <img src="img/logo-its-wesus-hero.webp" alt="It's Wesus Premium" class="h-full w-auto object-contain object-right opacity-60" aria-hidden="true" />
               </div>
 
@@ -187,7 +182,7 @@
             <div class="lg:col-span-3 relative group">
               <div class="widget-card-backlight" aria-hidden="true"></div>
 
-              <div class="hero-card-crystal p-6 rounded-3xl relative z-10 flex flex-col justify-between min-h-[260px]">
+              <div class="hero-card-crystal p-6 rounded-3xl relative z-10 flex flex-col justify-between min-h-[260px] h-full">
                 <div class="absolute inset-0 bg-hero-geometry-clean opacity-30 pointer-events-none"></div>
 
                 <p class="text-[11px] font-medium tracking-widest uppercase text-white/60 mb-2 relative z-10">
@@ -230,11 +225,11 @@
               <div class="relative group">
                 <div class="widget-card-backlight" aria-hidden="true"></div>
 
-                <div class="hero-card-crystal p-4 lg:p-6 rounded-3xl flex flex-col justify-center items-center text-center relative z-10 overflow-hidden min-h-[140px]">
+                <div class="hero-card-crystal p-4 lg:p-6 rounded-3xl flex flex-col justify-center items-center text-center relative z-10 overflow-hidden min-h-[140px] h-full">
                   <div class="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-40"></div>
                   <div class="widget-backlight-champagne" aria-hidden="true"></div>
 
-                  <div class="flex items-center justify-center gap-1.5 mb-3 z-10 w-full border-b border-white/5 pb-2">
+                  <div class="flex items-center justify-center gap-1.5 mb-6 -mt-8 z-10 w-full border-b border-white/5 pb-2 lg:mb-0 lg:-mt-0">
                     <svg class="w-3.5 h-3.5 icon-seal-gold shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                     </svg>
@@ -242,17 +237,17 @@
                   </div>
 
                   <div class="flex items-start justify-center z-10 mt-1 select-all">
-                    <span class="text-4xl lg:text-5xl font-bold text-gold-liquid leading-none tracking-tight">10</span>
+                    <span class="text-4xl lg:text-5xl font-bold text-gold-liquid leading-none tracking-tight ml-2">10</span>
                     <span class="text-[#E8D08D] font-bold text-lg lg:text-xl ml-0.5 mt-0.5 select-none">%</span>
                   </div>
                   <span class="text-[8px] text-white/30 uppercase tracking-widest mt-3 z-10 font-medium">Retorno Fixo</span>
                 </div>
               </div>
 
-              <div class="relative group">
+              <div class="relative group h-full">
                 <div class="widget-card-backlight" aria-hidden="true"></div>
 
-                <div class="hero-card-crystal p-4 lg:p-6 rounded-3xl flex flex-col justify-center items-center text-center relative z-10 overflow-hidden min-h-[140px]">
+                <div class="hero-card-crystal p-4 lg:p-6 rounded-3xl flex flex-col justify-center items-center text-center relative z-10 overflow-hidden min-h-[140px] h-full">
                   <div class="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-40"></div>
                   <div class="widget-backlight-champagne" aria-hidden="true"></div>
 
@@ -273,16 +268,19 @@
                           <stop offset="100%" stop-color="#8A662D" />
                         </linearGradient>
                       </defs>
+
                       <circle cx="50" cy="50" r="46" class="chrono-dial-case" />
                       <circle cx="50" cy="50" r="46" class="chrono-bezel-ring" />
                       <circle cx="50" cy="50" r="42" class="chrono-railway-border" />
                       <circle cx="50" cy="50" r="36" class="chrono-railway-border" />
                       <circle cx="50" cy="50" r="39" class="chrono-ticks-minutes" />
                       <circle cx="50" cy="50" r="39" class="chrono-indices-hours" />
+
                       <line x1="50" y1="7" x2="50" y2="13" stroke="#E8D08D" stroke-width="2.5" stroke-linecap="round" />
                       <line x1="93" y1="50" x2="87" y2="50" stroke="#C5A059" stroke-width="2" stroke-linecap="round" />
                       <line x1="50" y1="93" x2="50" y2="87" stroke="#C5A059" stroke-width="2" stroke-linecap="round" />
                       <line x1="7" y1="50" x2="13" y2="50" stroke="#C5A059" stroke-width="2" stroke-linecap="round" />
+
                       <circle cx="50" cy="50" r="42" fill="none" class="chrono-active-arc" stroke-dasharray="264" stroke-dashoffset="66" />
                     </svg>
 
