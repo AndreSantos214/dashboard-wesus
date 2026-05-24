@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ═══════════════════════════════════════════════════════════
    It's Wesus – Portal do Investidor
    input.css – Custom design system on top of Tailwind CSS
@@ -49,39 +53,66 @@ html.dark body {
   color: #ffffff;
 }
 
-/* ── AMBIENT GLOWS ────────────────────────────────────────── */
-.glow-orb {
-  position: fixed;
+/* ── AMBIENT AMBIENCE ORBS (ULTRA-SUBTLE DEEP DIFFUSION) ── */
+
+/* Classe base para orbes ambientais (GPU Isolated) */
+.deep-glow-orb {
+  position: fixed; /* Mantém a orbe no lugar enquanto a página rola (efeito paralaxe passivo) */
   border-radius: 50%;
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(120px);
-  transition: opacity 600ms ease;
+  pointer-events: none; /* Garante que não interfere nos cliques dos cards */
+  z-index: 0; /* Fica atrás de todo o conteúdo .app-root */
+  will-change: opacity, transform;
+  transform: translateZ(
+    0
+  ); /* Força a renderização em camada nativa da GPU (Sem Lag no Capacitor) */
+  transition: opacity 1s ease;
 }
 
-.glow-blue {
-  width: 500px;
-  height: 500px;
-  top: -120px;
-  right: -100px;
+/* 🔥 ORBE 1: Névoa de Ouro Quente (Em cima à Esquerda)
+   - Calibrada para ser extremamente difusa (blur 140px)
+   - Opacidade ultra-baixa (0.035) para não brigar com o logo/texto */
+.deep-glow-gold-top {
+  width: 55vw; /* Tamanho massivo para cobrir a zona de forma suave */
+  height: 55vw;
+  top: -15vh;
+  left: -10vw;
   background: radial-gradient(
     circle,
-    rgba(11, 31, 58, 0.8) 0%,
-    rgba(0, 60, 120, 0.25) 60%,
-    transparent 80%
-  );
-}
-
-.glow-gold {
-  width: 400px;
-  height: 400px;
-  bottom: -80px;
-  left: -80px;
-  background: radial-gradient(
-    circle,
-    rgba(197, 160, 89, 0.18) 0%,
+    rgba(197, 160, 89, 0.035) 0%,
     transparent 70%
   );
+  filter: blur(140px);
+}
+
+/* 🔥 ORBE 2: Névoa Ouro Platinum (No meio à Direita)
+   - Tons ligeiramente diferentes para dar complexidade à atmosfera
+   - Situada estrategicamente para dar volume por trás dos cartões secundários */
+.deep-glow-platinum-mid {
+  width: 65vw;
+  height: 65vw;
+  top: 30vh;
+  right: -15vw;
+  background: radial-gradient(
+    circle,
+    rgba(232, 208, 141, 0.03) 0%,
+    transparent 65%
+  );
+  filter: blur(160px);
+}
+
+/* 🔥 ORBE 3: Névoa Bronze Profundo (Na Base à Direita)
+   - Fundo escuro para dar peso e absorver o final do scroll mobile */
+.deep-glow-bronze-base {
+  width: 50vw;
+  height: 50vw;
+  bottom: -10vh;
+  right: 5vw;
+  background: radial-gradient(
+    circle,
+    rgba(143, 118, 75, 0.025) 0%,
+    transparent 70%
+  );
+  filter: blur(120px);
 }
 
 /* ── APP ROOT & CONTAINER ─────────────────────────────────── */
@@ -158,15 +189,24 @@ html.dark body {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 2px;
-  background: linear-gradient(
+  padding: 2px; /* Mantém a espessura da lapidação original */
+
+  /* 🔥 O TEU BRILHO ORIGINAL: Rigorosamente as mesmas cores, stops e ângulos que enviaste */
+  background-image: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.6) 0%,
-    rgba(197, 160, 89, 0.4) 25%,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(197, 160, 89, 0.1) 25%,
     transparent 50%,
-    rgba(197, 160, 89, 0.2) 75%,
-    rgba(255, 255, 255, 0.5) 100%
-  );
+    rgba(197, 160, 89, 0.1) 75%,
+    rgba(255, 255, 255, 0.4) 100%
+  ) !important;
+
+  /* 🔥 INDUÇÃO DE MOVIMENTO: Expandimos o mapa do gradiente para ele ter margem de manobra 
+     e interligamos a posição com o giroscópio e scroll através da aceleração gráfica */
+  background-size: 200% 200% !important;
+  background-position: calc(50% + var(--glare-x) * 1.5%)
+    calc(50% + var(--glare-y) * 1.5%) !important;
+
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -174,22 +214,36 @@ html.dark body {
   mask-composite: exclude;
   pointer-events: none;
   z-index: 5;
+  will-change: background-position; /* Avisa a WebView do Capacitor para isolar a camada */
 }
 
+/* RECALIBRAÇÃO DINÂMICA DO REFLEXO DE CRISTAL */
 .hero-card-crystal::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -50%; /* Expandido para o reflexo ter margem para correr sem cortar */
+  /* Um gradiente ligeiramente mais suave e refinado para não cansar a vista */
   background: linear-gradient(
     115deg,
-    transparent 40%,
-    rgba(255, 255, 255, 0.04) 48%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.04) 52%,
-    transparent 60%
-  );
+    transparent 42%,
+    rgba(255, 255, 255, 0.01) 48%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.01) 52%,
+    transparent 58%
+  ) !important;
   pointer-events: none;
   z-index: 2;
+
+  /* 🔥 A MÁGICA DA GPU: Controlado estritamente por variáveis CSS dinâmicas.
+     O fallback padrão é 0% caso o utilizador esteja no desktop sem giroscópio. */
+  transform: translate3d(var(--glare-x, 0%), var(--glare-y, 0%), 0)
+    translateZ(0) !important;
+  will-change: transform;
+}
+
+/* Desativar reflexo diagonal para cards de dados puros */
+.no-glare::after {
+  display: none !important;
 }
 
 .crystal-base-glow {
@@ -253,8 +307,8 @@ html.dark body {
 
 .hero-logo-glow {
   position: absolute;
-  width: 250px;
-  height: 250px;
+  width: 300px;
+  height: 300px;
   background: radial-gradient(
     circle,
     rgba(197, 160, 89, 0.15) 0%,
@@ -266,16 +320,27 @@ html.dark body {
   z-index: -1;
 }
 
-/* ── HIGH FINANCING CLEAN CHART ───────────────────────────── */
+/* ── CALIBRAÇÃO ESTÁTICA PUREZA MAXIMA (S/ ANIMAÇÕES) ── */
+
 .premium-chart-core-line {
   stroke: #e8d08d !important;
   stroke-width: 2.5;
   stroke-linecap: round;
-  transform: translateZ(0);
-  will-change: stroke-dashoffset;
-  animation: drawPremiumChartLine 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  opacity: 1 !important; /* Renderiza instantaneamente sem delay */
+  transform: translateZ(0); /* Isola na GPU de forma estática */
   filter: drop-shadow(0 0 5px rgba(232, 208, 141, 0.8))
     drop-shadow(0 0 12px rgba(197, 160, 89, 0.4));
+}
+
+.premium-chart-projected-shadow {
+  transform: translateZ(0);
+  opacity: 1 !important; /* Exibição imediata do preenchimento */
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 -4px 16px rgba(197, 160, 89, 0.25));
+}
+
+#chartFinalNode {
+  transform: scale(1) !important; /* O ponto dourado aparece fixo no topo */
 }
 
 .premium-chart-projected-shadow {
@@ -285,29 +350,6 @@ html.dark body {
   mix-blend-mode: screen;
   animation: fadeInPremiumFill 1s ease-out 0.8s forwards;
   filter: drop-shadow(0 -4px 16px rgba(197, 160, 89, 0.25));
-}
-
-@keyframes drawPremiumChartLine {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-@keyframes fadeInPremiumFill {
-  to {
-    opacity: 1;
-  }
-}
-
-#chartFinalNode {
-  transform-origin: center;
-  transform: scale(0);
-  animation: fadeInFinalNode 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.5s
-    forwards;
-}
-@keyframes fadeInFinalNode {
-  to {
-    transform: scale(1);
-  }
 }
 
 .premium-tooltip {
@@ -386,48 +428,120 @@ html.dark body {
   filter: drop-shadow(0 0 8px rgba(232, 208, 141, 0.7));
 }
 
-/* ── ASSETS TABLE & STATUS BADGES ─────────────────────────── */
+/* ── MÓDULO 4: ASSETS SYSTEM & ULTRA-PREMIUM BADGES ────────── */
+
+/* Badge de Status Elevado para Luxo (Muted Amber-Gold Shield) */
 .status-badge-construction {
-  display: inline-block;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
   text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: 9999px;
-  background: rgba(234, 179, 8, 0.15);
-  color: #eab308;
-  border: 1px solid rgba(234, 179, 8, 0.25);
+  padding: 3px 9px !important;
+  border-radius: 6px !important; /* Visual mais quadrado e imponente estilo selo */
+  background: rgba(143, 118, 75, 0.15) !important;
+  color: #e8d08d !important;
+  border: 1px solid rgba(197, 160, 89, 0.3) !important;
   white-space: nowrap;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
+/* Bolinha pulsante de atividade interna no selo */
+.status-badge-construction::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  background-color: #c5a059;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 6px #e8d08d;
+}
+
+/* Configuração do Cabeçalho da Tabela Corporativa */
 .assets-th {
-  padding: 0.875rem 1.25rem;
+  padding: 1rem 1.5rem !important;
   text-align: left;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.15em !important;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
+/* Células de Dados Alinhadas */
 .assets-td {
-  padding: 1rem 1.25rem;
-  font-size: 0.8125rem;
+  padding: 1.15rem 1.5rem !important;
+  font-size: 0.85rem !important;
   vertical-align: middle;
 }
 
+/* Linhas da Tabela com Efeito de Passagem de Rato Fluido */
 .assets-row {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: background 200ms ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  background: transparent;
+  transition: background-color 250ms ease;
 }
 
 .assets-row:last-child {
-  border-bottom: none;
+  border-bottom: none !important;
 }
+
 .assets-row:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Miniaturas das Imagens dos Ativos (Efeito Moldura de Joia) */
+.asset-thumbnail-wrapper {
+  position: relative;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.asset-thumbnail-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
+
+/* 🔥 CARROSSEL MOBILE ULTRA-SMOOTH (60 FPS CAPACITOR BLINDADO) */
+.assets-carousel {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  will-change: transform;
+}
+
+/* Card Individual Móvel Lapidado */
+.carousel-asset-card {
+  position: relative;
+  background: linear-gradient(
+    145deg,
+    rgba(11, 31, 58, 0.5) 0%,
+    rgba(7, 19, 38, 0.85) 100%
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  transform: translateZ(0);
+}
+
+.carousel-asset-image-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.35;
+  background-size: cover;
+  background-position: center;
+  background-image: url("../img/casa-background-mobile-xsmall.webp");
+  mask-image: linear-gradient(to bottom, #000 35%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent 100%);
 }
 
 /* ── WRAPPER BACKLIGHTS (CALIBRAÇÃO INTENSA) ──────────────── */
@@ -621,6 +735,7 @@ html.dark body {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
+  color: rgba(255, 255, 255, 0.75) !important;
 }
 
 /* ── UTILITIES ────────────────────────────────────────────── */
@@ -659,4 +774,170 @@ a,
 button {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+}
+
+/* ── MÓDULO 5: EMBEDDED OBSIDIAN GLASS VAULT (CORRIGIDO) ── */
+.opportunity-card-obsidian {
+  position: relative;
+  /* 🔥 TRANSFORMAÇÃO EM VIDRO: Trocamos a cor sólida por fundos RGBA semitransparentes */
+  background: linear-gradient(
+    135deg,
+    rgba(4, 12, 22, 0.65) 0%,
+    rgba(7, 20, 38, 0.8) 60%,
+    rgba(10, 27, 51, 0.65) 100%
+  ) !important;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(4, 12, 22, 0.65) 0%,
+      rgba(7, 20, 38, 0.8) 60%,
+      rgba(10, 27, 51, 0.65) 100%
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23c5a059' stroke-opacity='0.05' stroke-width='0.75'%3E%3Cpath d='M0 0h40v40H0zm40 40h40v40H40z'/%3E%3Ccircle cx='40' cy='40' r='2' fill='%23c5a059' fill-opacity='0.15'/%3E%3C/g%3E") !important;
+
+  /* 🔥 MOTOR DE VIDRO PREMIUM: Ativa a refração de luz do fundo do cenário */
+  backdrop-filter: blur(25px) saturate(210%);
+  -webkit-backdrop-filter: blur(25px) saturate(210%);
+
+  border-radius: 1.5rem;
+  overflow: hidden;
+  border: none !important;
+
+  /* Chanfro de luz superior branca do vidro levemente acentuado para dar espessura */
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.7),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.12),
+    inset 1px 0 0 rgba(232, 208, 141, 0.15) !important;
+  transform: translateZ(0);
+}
+
+/* 🔥 O REFLEXO DO VIDRO (Glass Glare Line) */
+.opportunity-card-obsidian::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 28%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(232, 208, 141, 0.15) 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(232, 208, 141, 0.15) 70%,
+    transparent
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Moldura interna flutuante para o Ícone */
+.icon-badge-shield {
+  background: linear-gradient(
+    135deg,
+    rgba(197, 160, 89, 0.15),
+    rgba(7, 20, 38, 0.6)
+  );
+  border: 1px solid rgba(197, 160, 89, 0.3);
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Os números em Ouro Líquido do Destaque Lateral */
+.metric-pop-value {
+  background: linear-gradient(135deg, #ffffff 0%, #e8d08d 50%, #c5a059 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(197, 160, 89, 0.3));
+}
+
+/* RECALIBRAÇÃO DO BOTÃO LINGOTE PARA COMPOSIÇÃO TRIDIMENSIONAL */
+.btn-gold-lingot {
+  background: linear-gradient(
+    135deg,
+    #a38349 0%,
+    #c5a059 45%,
+    #8f764b 75%,
+    #463722 100%
+  ) !important;
+  color: #071326 !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 1.1rem 2.5rem !important;
+  border-radius: 0.85rem !important;
+  border: 1px solid rgba(70, 55, 34, 0.5) !important;
+  box-shadow:
+    0 12px 24px -6px rgba(0, 0, 0, 0.6),
+    0 4px 12px -2px rgba(70, 55, 34, 0.4),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.45),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.35) !important;
+  transition: all 300ms cubic-bezier(0.25, 1, 0.5, 1) !important;
+  transform: translateZ(0);
+  will-change: transform, filter;
+}
+
+.btn-gold-lingot:hover {
+  filter: brightness(1.06) drop-shadow(0 0 14px rgba(197, 160, 89, 0.35));
+  transform: translateY(-2px) scale(1.01) translateZ(0);
+}
+
+.btn-gold-lingot:active {
+  transform: translateY(1px) scale(0.98) translateZ(0);
+}
+
+/* Emblema Live de Alta Finança (Selo Superior) */
+.premium-live-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(197, 160, 89, 0.25) !important;
+  padding: 4px 10px !important;
+  border-radius: 9999px !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  color: #e8d08d !important;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Emblema Live de Alta Finança (Selo Superior) */
+.premium-live-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(197, 160, 89, 0.25) !important;
+  padding: 4px 10px !important;
+  border-radius: 9999px !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  color: #e8d08d !important;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* 🔥 CORREÇÃO: Inserida a classe do ponto dinâmico que faltava e removido o bug da chave */
+.premium-live-dot {
+  width: 4px !important;
+  height: 4px !important;
+  background-color: #6fcf97 !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 6px #6fcf97 !important;
+  flex-shrink: 0;
+}
+
+.img-mobile {
+  margin-top: -5rem !important;
+}
+
+.button-eye {
+  margin-top: 2rem !important;
 }

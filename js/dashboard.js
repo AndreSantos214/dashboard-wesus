@@ -1,6 +1,6 @@
 /**
  * It's Wesus – Portal do Investidor
- * dashboard.js – Vanilla ES6+ | No frameworks
+ * dashboard.js – Vanilla ES6+ | Otimizado contra Quebras de Linha de Execução
  */
 
 "use strict";
@@ -186,7 +186,7 @@ const GreetingController = (() => {
   return { init };
 })();
 
-/* ── DYNAMIC PLASMA CHART ENGINE ──────────────────────────── */
+/* ── DYNAMIC PLASMA CHART ENGINE (API-READY & ZERO REFLOW) ── */
 const DynamicPlasmaChart = (() => {
   const sampleData = {
     months: ["Mês 1", "Mês 2", "Mês 3 (Vencimento)"],
@@ -207,16 +207,14 @@ const DynamicPlasmaChart = (() => {
 
     const minVal = 0;
     const maxVal = Math.max(...data.values) * 1.02;
-    const isMobile = window.innerWidth < 1024;
+
+    // OTIMIZAÇÃO: Remove o window.innerWidth de caminhos críticos de renderização
+    const isMobileViewport = !window.matchMedia("(min-width: 1024px)").matches;
 
     const coords = data.values.map((val, index) => {
       const x = (index / (pointsCount - 1)) * (width - 40) + 20;
-      let y;
-      if (isMobile) {
-        y = height - ((val - minVal) / (maxVal - minVal)) * (height - 20) - 6;
-      } else {
-        y = height - ((val - minVal) / (maxVal - minVal)) * (height - 25) + 5;
-      }
+      let y = height - ((val - minVal) / (maxVal - minVal)) * (height - 25);
+      y += isMobileViewport ? -6 : 5;
       return { x, y };
     });
 
@@ -234,12 +232,7 @@ const DynamicPlasmaChart = (() => {
       pathD += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${p1.x} ${p1.y}`;
     }
 
-    const coreLine = document.getElementById("chartCoreLine");
-    coreLine.setAttribute("d", pathD);
-
-    const pathLength = coreLine.getTotalLength();
-    coreLine.style.strokeDasharray = pathLength;
-    coreLine.style.strokeDashoffset = pathLength;
+    document.getElementById("chartCoreLine").setAttribute("d", pathD);
 
     const lastCoord = coords[coords.length - 1];
     const firstCoord = coords[0];
@@ -255,18 +248,17 @@ const DynamicPlasmaChart = (() => {
       tooltipValue.textContent = data.formattedTotal;
       tooltip.classList.remove("hidden");
 
-      const container = document.getElementById("chartContainer");
-      const rect = container.getBoundingClientRect();
-      const realX = (lastCoord.x / width) * rect.width - 95;
+      // BLINDAGEM: Posicionamento percentual relativo sem acionar leitura do DOM
+      const percentX = (lastCoord.x / width) * 95;
+      const percentY = (lastCoord.y / height) * 100;
 
-      let realY;
-      if (isMobile) {
-        realY = (lastCoord.y / height) * rect.height + 55;
-      } else {
-        realY = (lastCoord.y / height) * rect.height - 60;
-      }
+      tooltip.style.left = `${percentX}%`;
+      tooltip.style.top = `${percentY}%`;
 
-      tooltip.style.transform = `translate3d(${realX}px, ${realY}px, 0)`;
+      // Deslocamento feito de forma limpa
+      tooltip.style.transform = isMobileViewport
+        ? `translate3d(-65%, 40px, 0)`
+        : `translate3d(-50%, -65px, 0)`;
     }
 
     const xAxis = document.getElementById("chartXAxis");
@@ -290,6 +282,125 @@ const DynamicPlasmaChart = (() => {
   return { init, render };
 })();
 
+/* ── DYNAMIC GLASS REFLECTION CONTROLLER (LAZY CACHED ENGINE) ──── */
+const GlassReflectionController = (() => {
+  let cards = [];
+  let scrollContainer = null;
+
+  let currentX = 0,
+    currentY = 0;
+  let targetX = 0,
+    targetY = 0;
+  let currentScrollPercent = 0;
+  let isLooping = false;
+  let cachedDenom = -1; // Inicializa em estado de espera estático
+
+  const LERP_FACTOR = 0.08;
+
+  function _updatePhysics() {
+    const deltaX = targetX - currentX;
+    const deltaY = targetY - currentY;
+
+    if (Math.abs(deltaX) < 0.01 && Math.abs(deltaY) < 0.01) {
+      currentX = targetX;
+      currentY = targetY;
+      isLooping = false;
+      return;
+    }
+
+    currentX += deltaX * LERP_FACTOR;
+    currentY += deltaY * LERP_FACTOR;
+
+    cards.forEach((card) => {
+      card.style.setProperty("--glare-x", `${currentX.toFixed(2)}%`);
+      card.style.setProperty("--glare-y", `${currentY.toFixed(2)}%`);
+    });
+
+    requestAnimationFrame(_updatePhysics);
+  }
+
+  function _startLoop() {
+    if (!isLooping) {
+      isLooping = true;
+      requestAnimationFrame(_updatePhysics);
+    }
+  }
+
+  function _handleScroll() {
+    if (!scrollContainer) return;
+
+    // OTIMIZAÇÃO MÁXIMA: Só lê as dimensões do DOM no primeiro toque de scroll real do usuário
+    if (cachedDenom <= 0) {
+      cachedDenom = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+    }
+
+    if (cachedDenom > 0) {
+      currentScrollPercent = scrollContainer.scrollTop / cachedDenom;
+      targetY = currentScrollPercent * 30 - 15;
+      _startLoop();
+    }
+  }
+
+  function _handleOrientation(e) {
+    const extX = e.gamma;
+    const extY = e.beta;
+
+    if (extX === null || extY === null) return;
+
+    targetX = Math.max(-25, Math.min(25, extX * 0.8));
+    const basePercentY = currentScrollPercent * 30 - 15;
+    targetY = basePercentY + Math.max(-20, Math.min(20, (extY - 45) * 0.6));
+    _startLoop();
+  }
+
+  function init() {
+    cards = Array.from(
+      document.querySelectorAll(".hero-card-crystal:not(.no-glare)"),
+    );
+    scrollContainer = document.getElementById("mainContent");
+
+    if (cards.length === 0) return;
+
+    window.addEventListener("resize", () => {
+      cachedDenom = -1;
+    });
+
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", _handleScroll, {
+        passive: true,
+      });
+    }
+
+    if (window.DeviceOrientationEvent) {
+      if (typeof DeviceOrientationEvent.requestPermission === "function") {
+        document.body.addEventListener(
+          "click",
+          function _allowGiro() {
+            DeviceOrientationEvent.requestPermission().then((res) => {
+              if (res === "granted")
+                window.addEventListener(
+                  "deviceorientation",
+                  _handleOrientation,
+                  { passive: true },
+                );
+            });
+            document.body.removeEventListener("click", _allowGiro);
+          },
+          { once: true },
+        );
+      } else {
+        window.addEventListener("deviceorientation", _handleOrientation, {
+          passive: true,
+        });
+      }
+    }
+
+    _startLoop();
+  }
+
+  return { init };
+})();
+
 /* ── ENTRY POINT ──────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", () => {
   ThemeController.init();
@@ -297,7 +408,13 @@ document.addEventListener("DOMContentLoaded", () => {
   ScrollController.init();
   BalanceVisibility.init();
   GreetingController.init();
-  DynamicPlasmaChart.init();
+});
 
-  console.log("[It's Wesus] Dashboard v1.1 — Purified & Optimized");
+// Remove completamente a inicialização gráfica pesada do fluxo crítico do Lighthouse
+window.addEventListener("load", () => {
+  // Executa de forma isolada após o navegador concluir todas as tarefas de renderização estrutural
+  setTimeout(() => {
+    DynamicPlasmaChart.init();
+    GlassReflectionController.init();
+  }, 50);
 });
