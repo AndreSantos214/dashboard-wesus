@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="css/output.css" />
 </head>
 
-<body class="font-inter bg-wesus text-white dark:bg-wesus dark:text-white overflow-hidden select-none">
+<body class="font-inter bg-wesus text-white dark:bg-wesus dark:text-white lg:overflow-hidden select-none">
 
   <!-- ═══════════════════════════════════════════════════════
        AMBIENT GLOWS (background decoration)
@@ -31,7 +31,7 @@
   <!-- ═══════════════════════════════════════════════════════
        ROOT LAYOUT CONTAINER
   ════════════════════════════════════════════════════════════ -->
-  <div class="app-root h-[100dvh] w-full flex overflow-hidden">
+  <div class="app-root min-h-screen lg:h-[100dvh] w-full flex flex-col lg:flex-row lg:overflow-hidden">
 
     <!-- ─────────────────────────────────────────────────────
          DESKTOP SIDEBAR (hidden on mobile)
@@ -107,7 +107,7 @@
     ────────────────────────────────────────────────────────── -->
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
 
-      <main id="mainContent" class="flex-1 overflow-y-auto overscroll-contain px-4 lg:px-8 py-5 lg:py-8 pb-safe-bottom" aria-label="Conteúdo principal">
+      <main id="mainContent" class="flex-1 overflow-visible lg:overflow-y-auto lg:overscroll-contain px-4 lg:px-8 py-5 lg:py-8 pb-safe-bottom" aria-label="Conteúdo principal">
 
         <div class="max-w-6xl mx-auto w-full space-y-6 px-2 lg:px-0">
 

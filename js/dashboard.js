@@ -1,6 +1,6 @@
 /**
  * It's Wesus – Portal do Investidor
- * dashboard.js – Vanilla ES6+ | Otimizado contra Quebras de Linha de Execução
+ * dashboard.js – Vanilla ES6+ | Otimizado para Scroll Híbrido (Desktop/Mobile)
  */
 
 "use strict";
@@ -103,17 +103,6 @@ const ScrollController = (() => {
   function init() {
     const mainContent = document.getElementById("mainContent");
     if (!mainContent) return;
-
-    document.body.addEventListener(
-      "touchmove",
-      (e) => {
-        if (!mainContent.contains(e.target)) {
-          e.preventDefault();
-        }
-      },
-      { passive: false },
-    );
-
     mainContent.style.webkitOverflowScrolling = "touch";
   }
 
@@ -157,7 +146,7 @@ const BalanceVisibility = (() => {
 
     const eyeBtns = document.querySelectorAll(".header-action-btn");
     if (eyeBtns.length > 0) {
-      eyeBtns[0].addEventListener("click", toggle);
+      eyeBtns.forEach((btn) => btn.addEventListener("click", toggle));
     }
   }
 
@@ -186,7 +175,7 @@ const GreetingController = (() => {
   return { init };
 })();
 
-/* ── DYNAMIC PLASMA CHART ENGINE (API-READY & ZERO REFLOW) ── */
+/* ── DYNAMIC PLASMA CHART ENGINE ──────────────────────────── */
 const DynamicPlasmaChart = (() => {
   const sampleData = {
     months: ["Mês 1", "Mês 2", "Mês 3 (Vencimento)"],
@@ -207,8 +196,6 @@ const DynamicPlasmaChart = (() => {
 
     const minVal = 0;
     const maxVal = Math.max(...data.values) * 1.02;
-
-    // OTIMIZAÇÃO: Remove o window.innerWidth de caminhos críticos de renderização
     const isMobileViewport = !window.matchMedia("(min-width: 1024px)").matches;
 
     const coords = data.values.map((val, index) => {
@@ -248,17 +235,14 @@ const DynamicPlasmaChart = (() => {
       tooltipValue.textContent = data.formattedTotal;
       tooltip.classList.remove("hidden");
 
-      // BLINDAGEM: Posicionamento percentual relativo sem acionar leitura do DOM
       const percentX = (lastCoord.x / width) * 95;
       const percentY = (lastCoord.y / height) * 100;
 
       tooltip.style.left = `${percentX}%`;
       tooltip.style.top = `${percentY}%`;
-
-      // Deslocamento feito de forma limpa
       tooltip.style.transform = isMobileViewport
-        ? `translate3d(-65%, 40px, 0)`
-        : `translate3d(-50%, -65px, 0)`;
+        ? `translate3d(-60%, 30px, 0)`
+        : `translate3d(-50%, -60px, 0)`;
     }
 
     const xAxis = document.getElementById("chartXAxis");
@@ -282,7 +266,7 @@ const DynamicPlasmaChart = (() => {
   return { init, render };
 })();
 
-/* ── DYNAMIC GLASS REFLECTION CONTROLLER (LAZY CACHED ENGINE) ──── */
+/* ── DYNAMIC GLASS REFLECTION CONTROLLER (LAZY HYBRID ENGINE) ── */
 const GlassReflectionController = (() => {
   let cards = [];
   let scrollContainer = null;
@@ -293,7 +277,7 @@ const GlassReflectionController = (() => {
     targetY = 0;
   let currentScrollPercent = 0;
   let isLooping = false;
-  let cachedDenom = -1; // Inicializa em estado de espera estático
+  let cachedDenom = -1;
 
   const LERP_FACTOR = 0.08;
 
@@ -327,18 +311,32 @@ const GlassReflectionController = (() => {
   }
 
   function _handleScroll() {
-    if (!scrollContainer) return;
+    const isMobileViewport = !window.matchMedia("(min-width: 1024px)").matches;
 
-    // OTIMIZAÇÃO MÁXIMA: Só lê as dimensões do DOM no primeiro toque de scroll real do usuário
-    if (cachedDenom <= 0) {
-      cachedDenom = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+    if (isMobileViewport) {
+      // No Mobile, lemos o scroll da janela global do documento
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      if (cachedDenom <= 0) {
+        cachedDenom =
+          document.documentElement.scrollHeight - window.innerHeight;
+      }
+      if (cachedDenom > 0) {
+        currentScrollPercent = scrollTop / cachedDenom;
+      }
+    } else {
+      // No Desktop, mantém a leitura da div interna encapsulada
+      if (!scrollContainer) return;
+      if (cachedDenom <= 0) {
+        cachedDenom =
+          scrollContainer.scrollHeight - scrollContainer.clientHeight;
+      }
+      if (cachedDenom > 0) {
+        currentScrollPercent = scrollContainer.scrollTop / cachedDenom;
+      }
     }
 
-    if (cachedDenom > 0) {
-      currentScrollPercent = scrollContainer.scrollTop / cachedDenom;
-      targetY = currentScrollPercent * 30 - 15;
-      _startLoop();
-    }
+    targetY = currentScrollPercent * 30 - 15;
+    _startLoop();
   }
 
   function _handleOrientation(e) {
@@ -365,11 +363,13 @@ const GlassReflectionController = (() => {
       cachedDenom = -1;
     });
 
+    // Vincula o evento tanto na div interna quanto na janela global para blindagem total
     if (scrollContainer) {
       scrollContainer.addEventListener("scroll", _handleScroll, {
         passive: true,
       });
     }
+    window.addEventListener("scroll", _handleScroll, { passive: true });
 
     if (window.DeviceOrientationEvent) {
       if (typeof DeviceOrientationEvent.requestPermission === "function") {
@@ -410,11 +410,9 @@ document.addEventListener("DOMContentLoaded", () => {
   GreetingController.init();
 });
 
-// Remove completamente a inicialização gráfica pesada do fluxo crítico do Lighthouse
 window.addEventListener("load", () => {
-  // Executa de forma isolada após o navegador concluir todas as tarefas de renderização estrutural
   setTimeout(() => {
     DynamicPlasmaChart.init();
     GlassReflectionController.init();
-  }, 50);
+  }, 60);
 });
