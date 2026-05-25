@@ -17,6 +17,7 @@
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'" />
 
+  <link rel="preload" as="style" href="css/output.css" />
   <link rel="stylesheet" href="css/output.css" />
 </head>
 
@@ -113,8 +114,8 @@
 
           <header class="flex flex-col lg:flex-row lg:items-end justify-between gap-2 lg:gap-4 mb-2 relative">
             <div class="flex lg:hidden items-center justify-center">
-              <img src="img/logo-its-wesus-branco.webp" width="250" height="250" alt="It's Wesus" class="img-mobile hidden dark:block w-full max-w-[250px] h-auto object-contain drop-shadow-md lg:-mb-8 lg:-mt-12" />
-              <img src="img/logo-its-wesus-azul.webp" width="160" height="64" alt="It's Wesus" class="img-mobile block dark:hidden w-auto h-16 object-contain drop-shadow-md" />
+              <img src="img/logo-its-wesus-branco.webp" fetchpriority="high" width="250" height="250" alt="It's Wesus" class="img-mobile hidden dark:block w-full max-w-[250px] h-auto object-contain drop-shadow-md lg:-mb-8 lg:-mt-12" />
+              <img src="img/logo-its-wesus-azul.webp" fetchpriority="high" width="160" height="64" alt="It's Wesus" class="img-mobile block dark:hidden w-auto h-16 object-contain drop-shadow-md" />
             </div>
 
             <h1 class="font-playfair text-[26px] lg:text-[32px] text-white/90 text-center lg:text-left -mt-16 lg:-mt-0">Bom dia, Alexandre.</h1>
@@ -189,7 +190,8 @@
                 </p>
 
                 <div id="chartContainer" class="w-full flex-1 relative z-10 flex flex-col justify-end mt-2 min-h-[140px]">
-                  <svg id="dynamicPlasmaChart" class="w-full h-32 sm:h-44 lg:h-64 overflow-visible" preserveAspectRatio="none">
+
+                  <svg id="staticPlasmaChart" class="w-full h-32 sm:h-44 lg:h-64 overflow-visible" viewBox="0 0 1000 200" preserveAspectRatio="none">
                     <defs>
                       <linearGradient id="cleanGoldLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#8A662D" />
@@ -201,12 +203,14 @@
                         <stop offset="100%" stop-color="rgba(197, 160, 89, 0.0)" />
                       </linearGradient>
                     </defs>
-                    <path id="chartFillPath" fill="url(#premiumShadowFillGrad)" d="" class="premium-chart-projected-shadow" />
-                    <path id="chartCoreLine" fill="none" class="premium-chart-core-line" d="" />
-                    <circle id="chartFinalNode" r="4.5" fill="#E8D08D" class="drop-shadow-[0_0_6px_#C5A059]" />
+
+                    <path id="chartFillPath" fill="url(#premiumShadowFillGrad)" class="premium-chart-projected-shadow" d="M 20 191 C 180 191, 340 124.5, 500 124.5 C 660 124.5, 820 33.5, 980 33.5 L 980 200 L 20 200 Z" />
+                    <path id="chartCoreLine" fill="none" class="premium-chart-core-line" d="M 20 191 C 180 191, 340 124.5, 500 124.5 C 660 124.5, 820 33.5, 980 33.5" />
+
+                    <circle id="chartFinalNode" cx="980" cy="33.5" r="4.5" fill="#E8D08D" class="drop-shadow-[0_0_6px_#C5A059]" />
                   </svg>
 
-                  <div id="chartTooltip" class="premium-tooltip hidden">
+                  <div id="chartTooltip" class="premium-tooltip absolute left-[93%] top-[16%] -translate-x-[60%] translate-y-[30px] lg:-translate-x-1/2 lg:-translate-y-[60px]">
                     <div class="bg-wesus/95 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-xl shadow-[0_15px_30px_rgba(0,0,0,0.5)] flex flex-col items-center">
                       <p class="text-[8px] text-white/50 uppercase tracking-wider mb-0.5 whitespace-nowrap">Retorno Total</p>
                       <p id="tooltipValue" class="text-xs font-bold text-[#6FCF97] leading-none whitespace-nowrap">+ € 0,00</p>
@@ -214,6 +218,9 @@
                   </div>
 
                   <div id="chartXAxis" class="flex justify-between items-center text-[9px] text-white/40 uppercase tracking-widest mt-4 border-t border-white/10 pt-3 relative z-10">
+                    <span>Mês 1</span>
+                    <span>Mês 2</span>
+                    <span class="text-gold font-semibold">Mês 3 (Vencimento)</span>
                   </div>
                 </div>
               </div>
