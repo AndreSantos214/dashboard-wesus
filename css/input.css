@@ -304,8 +304,7 @@ html.dark body {
   stroke-linecap: round;
   opacity: 1 !important;
   transform: translateZ(0);
-  filter: drop-shadow(0 0 5px rgba(232, 208, 141, 0.8))
-    drop-shadow(0 0 12px rgba(197, 160, 89, 0.4));
+  /* 🔥 FIX: Removido o drop-shadow em CSS que crashava o Lighthouse gatherer */
 }
 
 .premium-chart-projected-shadow {
@@ -317,6 +316,7 @@ html.dark body {
 
 #chartFinalNode {
   transform: scale(1) !important;
+  filter: drop-shadow(0 0 4px #c5a059); /* Mantido leve no nó simples */
 }
 
 .premium-tooltip {
@@ -385,14 +385,13 @@ html.dark body {
   stroke-width: 2.2;
   stroke-dasharray: 1.5, 19.96;
   fill: none;
-  filter: drop-shadow(0 0 2px rgba(197, 160, 89, 0.3));
 }
 
 .chrono-active-arc {
-  stroke: url(#bezelGoldGrad);
+  stroke: url(#bezelGrading);
+  stroke: url(#bezelGoldGrad) !important;
   stroke-width: 3.5;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 8px rgba(232, 208, 141, 0.7));
 }
 
 /* ── ASSETS SYSTEM & PREMIUM BADGES ───────────────────────── */
