@@ -17,8 +17,118 @@
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'" />
 
-  <link rel="preload" as="style" href="css/output.css" />
-  <link rel="stylesheet" href="css/output.css" />
+  <link rel="preload" as="style" href="css/output-dashboard.css" />
+  <link rel="stylesheet" href="css/output-dashboard.css" />
+
+  <style>
+    /* ─────────────────────────────────────────────────────────────
+   PATCH CRISTAL PREMIUM V8 - SILK PLATINUM & CHAMPAGNE EDGE
+   Bordas de Alta Definição + Máximo Contraste + 100% Estático GPU
+   ───────────────────────────────────────────────────────────── */
+
+    @media (max-width: 1023px) {
+
+      /* 1. Manter auras traseiras desligadas para performance pura */
+      .hero-card-backlight,
+      .widget-card-backlight,
+      .widget-backlight-champagne {
+        display: none !important;
+      }
+
+      /* 2. Otimização de Contraste e Lapidação do Vidro */
+      section[aria-labelledby="patrimonyHeading"] .hero-card-crystal,
+      section[aria-label="Oportunidades Exclusivas"] .hero-card-crystal,
+      .hero-card-crystal {
+        will-change: transform !important;
+        transform: translateZ(0);
+        backface-visibility: hidden !important;
+        perspective: 1000px !important;
+        overflow: hidden !important;
+
+        /* Desfoque luxuoso da V4 preservado */
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+
+        /* Espessura perfeita de fio de cristal */
+        border: 2.2px solid transparent !important;
+
+        /* GRADIENTE LINEAR ASSIMÉTRICO: Platina no topo, Champagne na base */
+        background:
+          /* Fundo Escuro Corporativo Premium da V4 */
+          linear-gradient(135deg, rgba(11, 31, 58, 0.85), rgba(7, 19, 38, 0.94) 50%, rgba(11, 31, 58, 0.82)) padding-box,
+          /* Transição linear suave que imita iluminação real de estúdio */
+          linear-gradient(145deg,
+            rgba(255, 255, 255, 0.38) 0%,
+            /* Brilho platina nítido no canto superior esquerdo */
+            rgba(255, 255, 255, 0.04) 35%,
+            /* Transparência elegante no corpo do card */
+            rgba(197, 160, 89, 0.12) 70%,
+            /* Sopro sutil de dourado Wesus na transição */
+            rgba(232, 208, 141, 0.35) 100%
+            /* Toque final champagne no canto inferior direito */
+          ) border-box !important;
+
+        background-clip: padding-box, border-box !important;
+        background-origin: padding-box, border-box !important;
+        background-size: auto, 100% 100% !important;
+
+        box-shadow: 0 22px 45px -12px rgba(0, 0, 0, 0.65) !important;
+      }
+
+      /* 3. Linha de reflexo interna diagonal (Suave e Invisível no scroll rápido) */
+      .hero-card-crystal:after {
+        content: "" !important;
+        position: absolute !important;
+        inset: 0 !important;
+        background: linear-gradient(115deg,
+            transparent 42%,
+            rgba(255, 255, 255, 0.01) 47%,
+            rgba(255, 255, 255, 0.04) 50%,
+            /* Linha de luz branca cristalina interna */
+            rgba(255, 255, 255, 0.01) 53%,
+            transparent 58%) !important;
+        pointer-events: none !important;
+        z-index: 2 !important;
+      }
+
+      .hero-card-crystal:before {
+        display: none !important;
+      }
+    }
+
+    /* 4. ELIMINAR TOTALMENTE AS BARRAS DE ROLAGEM (Mobile/Capacitor) */
+    /* Remove o rastro visual do scroll em qualquer div ou carrossel */
+    ::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    html,
+    body,
+    #mainContent,
+    .assets-carousel {
+      -ms-overflow-style: none !important;
+      /* IE/Edge */
+      scrollbar-width: none !important;
+      /* Firefox */
+    }
+
+    /* 5. BLOQUEIO ABSOLUTO DE SELEÇÃO DE TEXTO (Previne pegas congeladas) */
+    /* Força o override das classes "select-all" antigas apenas no ambiente mobile */
+    *,
+    .select-all {
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+
+      /* DESATIVAR POPUPS NATIVOS: Impede o iOS/Android de abrir o menu */
+      /* de "Copiar/Definir" ou a lupa de zoom ao pressionar o dedo */
+      -webkit-touch-callout: none !important;
+    }
+  </style>
+
 </head>
 
 <body class="font-inter bg-wesus text-white dark:bg-wesus dark:text-white lg:overflow-hidden select-none">
@@ -326,7 +436,7 @@
 
             <div class="flex items-center justify-between mb-4 relative z-10">
               <h2 id="assetsHeading" class="font-playfair text-xl font-bold text-white/90 tracking-wide">
-                Investimentos Ativos <span class="text-white/45 text-sm font-normal font-inter ml-1">(5)</span>
+                Investimentos Ativos <span class="text-white/70 text-sm font-normal font-inter ml-1">(5)</span>
               </h2>
             </div>
 

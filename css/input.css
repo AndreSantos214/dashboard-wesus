@@ -1102,3 +1102,89 @@ html.dark body {
     color: rgb(255 255 255 / var(--tw-text-opacity, 1));
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   OPTIMIZAÇÃO ULTRA-PERFORMANCE V4 - PORTAL DO INVESTIDOR
+   Bordas Reforçadas + Reflexo Nativo + Scroll Fluido 60FPS
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 1023px) {
+  /* 1. CONFIGURAÇÃO BASE DE REPASSE PARA A GPU */
+  section[aria-labelledby="patrimonyHeading"] .hero-card-crystal,
+  section[aria-label="Oportunidades Exclusivas"] .hero-card-crystal,
+  .hero-card-crystal {
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    perspective: 1000px !important;
+    overflow: hidden !important;
+
+    /* Ativar um desfoque elegante e equilibrado no vidro */
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+
+    /* DRIBBLING DA BORDA: Substitui a máscara pesada por clipagem dupla nativa */
+    border: 2.5px solid transparent !important; /* Borda ligeiramente mais grossa */
+    background:
+      linear-gradient(
+          135deg,
+          rgba(11, 31, 58, 0.75),
+          rgba(7, 19, 38, 0.9) 50%,
+          rgba(11, 31, 58, 0.7)
+        )
+        padding-box,
+      linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.45) 0%,
+          /* Brilho branco forte no canto superior esquerdo */
+            rgba(197, 160, 89, 0.35) 25%,
+          /* Transição suave para o ouro */ transparent 50%,
+          rgba(197, 160, 89, 0.25) 75%,
+          rgba(255, 255, 255, 0.5) 100%
+            /* Reforço de luz no canto inferior direito */
+        )
+        border-box !important;
+
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  /* Desativar o motor de máscara antigo que gerava o gargalo no mobile */
+  .hero-card-crystal:before {
+    display: none !important;
+  }
+
+  /* 2. O REFLEXO SUBTIL NO MEIO DO CARD (Otimizado) */
+  .hero-card-crystal:after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important; /* Forçado a 0 para nunca estourar o limite da textura na RAM */
+    background: linear-gradient(
+      115deg,
+      transparent 38%,
+      rgba(255, 255, 255, 0.03) 45%,
+      rgba(255, 255, 255, 0.12) 50%,
+      /* Linha de reflexo diagonal sutil e elegante */ rgba(255, 255, 255, 0.03)
+        55%,
+      transparent 62%
+    ) !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+    transform: translateZ(0) !important;
+  }
+
+  /* 3. SUAVIZAÇÃO DA AURA TRASEIRA (Amanpar o efeito sem quebrar o motor) */
+  .hero-card-backlight,
+  .widget-card-backlight {
+    filter: none !important; /* Desativa o desfoque de pixel via software */
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+    inset: -10px !important;
+    /* Usamos a própria difusão matemática do gradiente para emular a luz */
+    background: radial-gradient(
+      circle at 75% 25%,
+      rgba(197, 160, 89, 0.2) 0%,
+      rgba(0, 163, 255, 0.08) 40%,
+      transparent 70%
+    ) !important;
+  }
+}

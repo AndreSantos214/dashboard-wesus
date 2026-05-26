@@ -81,12 +81,59 @@ const NavigationController = (() => {
   return { init };
 })();
 
-/* ── SCROLL CONTROLLER ────────────────────────────────────── */
+/* ── SCROLL CONTROLLER (PURE GPU GYRO TILT ENGINE) ────────── */
 const ScrollController = (() => {
   function init() {
-    const mainContent = document.getElementById("mainContent");
-    if (mainContent) mainContent.style.webkitOverflowScrolling = "touch";
+    const crystalCards = document.querySelectorAll(".hero-card-crystal");
+    if (crystalCards.length === 0) return;
+
+    let ticking = false;
+
+    function handleOrientation(event) {
+      if (event.gamma === null || event.beta === null) return;
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          // Limita a inclinação a no máximo 6 graus para ser um efeito ultra sutil (Estilo Apple)
+          // Gamma controla o eixo Y (esquerda/direita) | Beta controla o eixo X (frente/trás)
+          const tiltX = Math.max(-6, Math.min(6, event.gamma * 0.2));
+          const tiltY = Math.max(-6, Math.min(6, (event.beta - 55) * 0.2)); // 55° é o ângulo médio de leitura na mão
+
+          crystalCards.forEach((card) => {
+            // Executado diretamente pelo hardware compositor da GPU (Zero layout repaint)
+            card.style.transform = `perspective(1000px) translateZ(0) rotateX(${-tiltY}deg) rotateY(${tiltX}deg)`;
+          });
+
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    function activateSensors() {
+      if (
+        typeof DeviceOrientationEvent !== "undefined" &&
+        typeof DeviceOrientationEvent.requestPermission === "function"
+      ) {
+        DeviceOrientationEvent.requestPermission()
+          .then((state) => {
+            if (state === "granted")
+              window.addEventListener(
+                "deviceorientation",
+                handleOrientation,
+                true,
+              );
+          })
+          .catch(console.error);
+      } else {
+        window.addEventListener("deviceorientation", handleOrientation, true);
+      }
+    }
+
+    document.addEventListener("click", activateSensors, { once: true });
+    document.addEventListener("touchstart", activateSensors, { once: true });
   }
+
   return { init };
 })();
 
@@ -144,18 +191,53 @@ const GreetingController = (() => {
   return { init };
 })();
 
-/* ── CONTRACT DATA CONTROLLER (Otimizado) ─────────────────── */
+/* ── CONTRACT DATA CONTROLLER (AUTOMATIC TOOLTIP ALIGNMENT) ── */
 const ChartDataController = (() => {
   const clientData = {
     months: 3,
     roiTotal: "+ € 24.500,00",
   };
 
+  function alignTooltip() {
+    const node = document.getElementById("chartFinalNode");
+    const tooltip = document.getElementById("chartTooltip");
+    const svg = document.getElementById("staticPlasmaChart");
+
+    if (!node || !tooltip || !svg) return;
+
+    // Pega nas coordenadas reais da bolinha do gráfico dentro do ecrã
+    const svgPoint = node.getBoundingClientRect();
+    const containerRect = svg.parentElement.getBoundingClientRect();
+
+    // Calcula o ponto central exato do nó do gráfico
+    const x = svgPoint.left - containerRect.left + svgPoint.width / 2;
+    const y = svgPoint.top - containerRect.top + svgPoint.height / 2;
+
+    // Aplica as coordenadas base
+    tooltip.style.left = `${x}px`;
+    tooltip.style.top = `${y}px`;
+
+    // 💡 CONDICIONAL DE MUDANÇA DE POSIÇÃO (A partir de 460px)
+    if (window.innerWidth <= 460) {
+      // Traduz -50% no X (centraliza) e 25px positivo no Y (empurra para BAIXO do ponto)
+      tooltip.style.transform = "translate(-80%, 25px)";
+    } else {
+      // Traduz -80% no X e -120% negativo no Y (empurra para CIMA do ponto)
+      tooltip.style.transform = "translate(-80%, -120%)";
+    }
+  }
+
   function init() {
     const tooltipValue = document.getElementById("tooltipValue");
     if (tooltipValue) {
       tooltipValue.textContent = clientData.roiTotal;
     }
+
+    // Executa o alinhamento inicial
+    alignTooltip();
+
+    // Se o ecrã rodar ou mudar de tamanho (Desktop), ele recalcula sozinho
+    window.addEventListener("resize", alignTooltip);
   }
 
   return { init };
