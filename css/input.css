@@ -2461,7 +2461,7 @@ html.dark body {
 
   /* 15e. Injeta folga na barra lateral para o perfil voar acima da barra de navegação */
   .sidebar > div:last-child {
-    margin-bottom: calc(65px + env(safe-area-inset-bottom)) !important;
+    margin-bottom: calc(75px + env(safe-area-inset-bottom)) !important;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4) !important;
     border-radius: 1rem !important;
   }
