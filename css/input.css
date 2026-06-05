@@ -2350,36 +2350,40 @@ html.dark body {
 }
 
 /* =========================================================================
-   BLOCO 15 — DESAFIO DO TABLET HORIZONTAL (TOUCH DESKTOP BREAKPOINT FIX - ULTRA LIGHT)
+   BLOCO 15 — DESAFIO DO TABLET HORIZONTAL (TOUCH DESKTOP BREAKPOINT FIX - ULTRA CLEAN)
+   Escopo: Apenas tablets na orientação horizontal (>= 1024px com pointer: coarse)
+   Efeito: Remove orbs/backlights traseiros e simula a luz diretamente no corpo do card
    ========================================================================= */
 @media (min-width: 1024px) and (pointer: coarse) {
-  /* 15a. DESLIGA TOTALMENTE AS LUZES FLUTUANTES TRASEIRAS (Fim do gargalo de cálculo) */
+  /* 15a. Extinção total de orbs globais e luzes absolutas por trás dos cards */
   .glow-orb,
   .hero-card-backlight,
   .widget-card-backlight,
-  .widget-backlight-champagne {
+  .widget-backlight-champagne,
+  .crystal-base-glow,
+  .hero-logo-glow {
     display: none !important;
     content: none !important;
     background: none !important;
+    filter: none !important;
   }
 
+  /* 15b. Otimização de pintura e simulação de luz embutida no contêiner do card */
   section[aria-labelledby="patrimonyHeading"] .hero-card-crystal,
   section[aria-label="Oportunidades Exclusivas"] .hero-card-crystal,
   section[aria-label="Desempenho Anual"] .hero-card-crystal,
   .hero-card-crystal {
     will-change: transform, opacity !important;
-    transform: translateZ(0) !important; /* Força aceleração 2D pura */
-
+    transform: translateZ(0) !important; /* Estabilização 2D por hardware */
     backface-visibility: hidden !important;
     perspective: 1000px !important;
     overflow: hidden !important;
 
-    /* 🔥 A CURA: Remove o desfoque dinâmico que travava a primeira pintura do tablet */
+    /* Desliga o desfoque de fundo dinâmico para eliminar o efeito de carregamento atrasado */
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 
-    /* Aumentamos sutilmente a opacidade do fundo (de 0.65/0.85 para 0.95/0.98) 
-       para manter o visual escuro luxuoso impecável, mesmo sem o desfoque traseiro */
+    /* Base planar sólida de altíssimo luxo */
     border: 2.2px solid transparent !important;
     background:
       linear-gradient(
@@ -2391,23 +2395,37 @@ html.dark body {
         padding-box,
       linear-gradient(
           145deg,
-          rgba(255, 255, 255, 0.38) 0%,
-          rgba(255, 255, 255, 0.04) 35%,
-          rgba(197, 160, 89, 0.12) 70%,
-          rgba(232, 208, 141, 0.35) 100%
+          rgba(255, 255, 255, 0.35) 0%,
+          rgba(255, 255, 255, 0.05) 35%,
+          rgba(197, 160, 89, 0.15) 70%,
+          rgba(232, 208, 141, 0.4) 100%
         )
         border-box !important;
 
-    box-shadow: 0 22px 45px -12px rgba(0, 0, 0, 0.75) !important;
+    /* 🔥 A MÁGICA: Sombra projetada com aura dourada externa + difusão interna premium */
+    box-shadow:
+      0 30px 60px -15px rgba(0, 0, 0, 0.85),
+      0 0 35px rgba(197, 160, 89, 0.14),
+      inset 0 0 25px rgba(197, 160, 89, 0.06),
+      inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
   }
 
-  /* 15c. Remove a máscara de clipping complexa de desktop */
+  /* 15c. Realce de iluminação embutida específico para o card em destaque (6 Meses) */
+  .plan-card-featured {
+    box-shadow:
+      0 30px 60px -15px rgba(0, 0, 0, 0.9),
+      0 0 45px rgba(197, 160, 89, 0.22),
+      inset 0 0 30px rgba(197, 160, 89, 0.1),
+      inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+  }
+
+  /* 15d. Elimina a pseudo-camada de corte complexa de desktops */
   .hero-card-crystal::before {
     display: none !important;
     content: none !important;
   }
 
-  /* 15d. Mantém a linha de reflexo diagonal estática levíssima por cima */
+  /* 15e. Preserva o reflexo linear estático diagonal discreto por cima do lingote */
   .hero-card-crystal::after {
     content: "" !important;
     position: absolute !important;
