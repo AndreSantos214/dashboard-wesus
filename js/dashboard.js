@@ -141,6 +141,13 @@ const NavigationController = (() => {
 /* ── SCROLL CONTROLLER (PURE GPU GYRO TILT ENGINE) ────────── */
 const ScrollController = (() => {
   function init() {
+    // ✔ TRAVA CIRÚRGICA: Aborta o giroscópio se for dispositivo tátil ou tela menor que desktop
+    const isTouchOrTablet =
+      window.matchMedia("(pointer: coarse)").matches ||
+      navigator.maxTouchPoints > 0 ||
+      window.innerWidth < 1024;
+    if (isTouchOrTablet) return;
+
     const crystalCards = document.querySelectorAll(".hero-card-crystal");
     if (crystalCards.length === 0) return;
 

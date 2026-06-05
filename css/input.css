@@ -2351,33 +2351,25 @@ html.dark body {
 
 /* =========================================================================
    BLOCO 15 — DESAFIO DO TABLET HORIZONTAL (TOUCH DESKTOP BREAKPOINT FIX)
-   Escopo: Telas grandes (>= 1024px) com telas táteis (iPads/Tablets Android)
-   Efeito: Mantém o layout de colunas do PC, mas aplica a pintura leve do Mobile
    ========================================================================= */
 @media (min-width: 1024px) and (pointer: coarse) {
-  /* 15a. Desliga as auras dinâmicas traseiras de blur para poupar a GPU móvel */
-  .hero-card-backlight,
-  .widget-card-backlight,
-  .widget-backlight-champagne {
-    display: none !important;
-  }
-
-  /* 15b. Força os cards a renderizarem na camada estável acelerada 2D */
   section[aria-labelledby="patrimonyHeading"] .hero-card-crystal,
   section[aria-label="Oportunidades Exclusivas"] .hero-card-crystal,
   section[aria-label="Desempenho Anual"] .hero-card-crystal,
   .hero-card-crystal {
-    will-change: transform !important;
-    transform: translateZ(0) !important;
+    /* ✔ PRÉ-RASTERIZAÇÃO: Aloca os cards diretamente na memória de vídeo da GPU */
+    will-change: transform, opacity !important;
+    transform: translateZ(
+      0
+    ) !important; /* Fixa o achatamento 2D acelerado nativo */
+
     backface-visibility: hidden !important;
     perspective: 1000px !important;
     overflow: hidden !important;
 
-    /* Aplica o desfoque de fundo otimizado e equilibrado para tablets */
     backdrop-filter: blur(20px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
 
-    /* Injeta a borda linear dupla de alta performance (sem máscaras pesadas) */
     border: 2.2px solid transparent !important;
     background:
       linear-gradient(
