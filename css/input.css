@@ -2350,33 +2350,43 @@ html.dark body {
 }
 
 /* =========================================================================
-   BLOCO 15 — DESAFIO DO TABLET HORIZONTAL (TOUCH DESKTOP BREAKPOINT FIX)
+   BLOCO 15 — DESAFIO DO TABLET HORIZONTAL (TOUCH DESKTOP BREAKPOINT FIX - ULTRA LIGHT)
    ========================================================================= */
 @media (min-width: 1024px) and (pointer: coarse) {
+  /* 15a. DESLIGA TOTALMENTE AS LUZES FLUTUANTES TRASEIRAS (Fim do gargalo de cálculo) */
+  .glow-orb,
+  .hero-card-backlight,
+  .widget-card-backlight,
+  .widget-backlight-champagne {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+  }
+
   section[aria-labelledby="patrimonyHeading"] .hero-card-crystal,
   section[aria-label="Oportunidades Exclusivas"] .hero-card-crystal,
   section[aria-label="Desempenho Anual"] .hero-card-crystal,
   .hero-card-crystal {
-    /* ✔ PRÉ-RASTERIZAÇÃO: Aloca os cards diretamente na memória de vídeo da GPU */
     will-change: transform, opacity !important;
-    transform: translateZ(
-      0
-    ) !important; /* Fixa o achatamento 2D acelerado nativo */
+    transform: translateZ(0) !important; /* Força aceleração 2D pura */
 
     backface-visibility: hidden !important;
     perspective: 1000px !important;
     overflow: hidden !important;
 
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    /* 🔥 A CURA: Remove o desfoque dinâmico que travava a primeira pintura do tablet */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 
+    /* Aumentamos sutilmente a opacidade do fundo (de 0.65/0.85 para 0.95/0.98) 
+       para manter o visual escuro luxuoso impecável, mesmo sem o desfoque traseiro */
     border: 2.2px solid transparent !important;
     background:
       linear-gradient(
           135deg,
-          rgba(11, 31, 58, 0.85),
-          rgba(7, 19, 38, 0.94) 50%,
-          rgba(11, 31, 58, 0.82)
+          rgba(11, 31, 58, 0.96),
+          rgba(7, 19, 38, 0.98) 50%,
+          rgba(11, 31, 58, 0.95)
         )
         padding-box,
       linear-gradient(
@@ -2388,16 +2398,16 @@ html.dark body {
         )
         border-box !important;
 
-    box-shadow: 0 22px 45px -12px rgba(0, 0, 0, 0.65) !important;
+    box-shadow: 0 22px 45px -12px rgba(0, 0, 0, 0.75) !important;
   }
 
-  /* 15c. Remove a máscara de clipping complexa que causava lag no WebKit/Safari */
+  /* 15c. Remove a máscara de clipping complexa de desktop */
   .hero-card-crystal::before {
     display: none !important;
     content: none !important;
   }
 
-  /* 15d. Restaura a linha de reflexo diagonal estática levíssima por cima */
+  /* 15d. Mantém a linha de reflexo diagonal estática levíssima por cima */
   .hero-card-crystal::after {
     content: "" !important;
     position: absolute !important;
