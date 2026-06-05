@@ -2349,6 +2349,39 @@ html.dark body {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   BLOCO 14x — ENGINE DE TRANSIÇÃO CINEMATOGRÁFICA (60FPS GPU)
+   Escopo: Global (Aplica-se a Mobile, Tablets e Computadores)
+   Correção: Fornece o suporte físico para o pipeline do dashboard.js
+   ═══════════════════════════════════════════════════════════════ */
+.wesus-hardware-card {
+  will-change: transform, opacity !important;
+  /* Curva premium amanteigada acelerada diretamente na memória de vídeo */
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.18s ease-in-out !important;
+}
+
+/* Estados de Saída (Cards deslizam e evaporam) */
+.wesus-exit-left {
+  transform: scale(0.96) translateX(-35px) translateZ(0) !important;
+  opacity: 0 !important;
+}
+.wesus-exit-right {
+  transform: scale(0.96) translateX(35px) translateZ(0) !important;
+  opacity: 0 !important;
+}
+
+/* Estados de Entrada (Cards surgem do lado oposto preparando o frame) */
+.wesus-enter-left {
+  transform: scale(0.96) translateX(-35px) translateZ(0) !important;
+  opacity: 0 !important;
+}
+.wesus-enter-right {
+  transform: scale(0.96) translateX(35px) translateZ(0) !important;
+  opacity: 0 !important;
+}
+
 /* =========================================================================
    BLOCO 15 — ESCUDO EXCLUSIVO: TABLET HORIZONTAL (LANDSCAPE TOUCH ONLY)
    Escopo: Ativa apenas em telas grandes (>= 1024px) que possuam tela tátil.
@@ -2461,7 +2494,7 @@ html.dark body {
 
   /* 15e. Injeta folga na barra lateral para o perfil voar acima da barra de navegação */
   .sidebar > div:last-child {
-    margin-bottom: calc(75px + env(safe-area-inset-bottom)) !important;
+    margin-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4) !important;
     border-radius: 1rem !important;
   }
@@ -2472,5 +2505,29 @@ html.dark body {
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
     padding-bottom: calc(10rem + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* =========================================================================
+   BLOCO 16b — ALINHAMENTO PIXEL PERFECT DO CARROSSEL MÓVEL
+   Escopo: Ativado abaixo de 1024px (Mobiles e Tablets Verticais)
+   Efeito: Alinha o primeiro card com os títulos, mantendo o infinito à direita
+   ========================================================================= */
+@media (max-width: 1023px) {
+  .assets-carousel {
+    /* Devolvemos as margens negativas originais do Tailwind para o container 
+       extrapolar as bordas físicas da tela na direita de forma infinita */
+    margin-left: -1rem !important;
+    margin-right: -1rem !important;
+
+    /* Injetamos os colchões internos que dão o recuo exato de 24px (1.5rem).
+       Isto faz com que o primeiro card fique milimetricamente alinhado com o 
+       título "Investimentos Ativos" e com os blocos de cima! */
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+
+    /* Alinha o ponto de travagem magnética do scroll ao mesmo recuo, 
+       garantindo que o card nunca fique preso fora do esquadro */
+    scroll-padding-left: 1.5rem !important;
   }
 }
