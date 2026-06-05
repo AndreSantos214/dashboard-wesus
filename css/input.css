@@ -2501,3 +2501,40 @@ html.dark body {
     border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
   }
 }
+
+/* =========================================================================
+   BLOCO 16 — ADAPTAÇÃO PARA TABLET VERTICAL / MOBILE LARGO (PORTRAIT SHIELD)
+   Escopo: Telas até 1023px (Tablets em pé e Smartphones largos)
+   Efeito: Limita o esticamento dos cards e blinda a rolagem de todas as abas
+   ========================================================================= */
+@media (max-width: 1023px) {
+  /* 16a. TETOS NOMINAIS DE LUXO: Limita a expansão e centraliza a estrutura */
+  .tab-content .hero-card-crystal,
+  .tab-content .opportunity-card-obsidian,
+  .tab-content .wesus-controls-group {
+    max-width: 560px !important; /* Mantém a proporção áurea perfeita de um app de elite */
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Faz com que os cabeçalhos das páginas e menus alinhem com a largura dos cards */
+  .tab-content > header,
+  .tab-content .contracts-nav-wrapper,
+  .tab-content .flex-items-center-justify-between,
+  .tab-content .subsection-header-bar {
+    max-width: 560px !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* 16b. COLO DO CONTÊINER: Margem de segurança inferior para as abas secundárias */
+  #tab-documentos,
+  #tab-conta,
+  #tab-oportunidades,
+  #tab-suporte {
+    /* Cria um recuo que joga o fim da página acima da barra tátil flutuante do sistema */
+    padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+  }
+}
