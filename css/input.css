@@ -2503,56 +2503,35 @@ html.dark body {
 }
 
 /* =========================================================================
-   BLOCO 16 (REESCRITO) — ADAPTAÇÃO COMPLETA PORTRAIT (TABLET VERTICAL)
+   BLOCO 16 — ADAPTAÇÃO COMPREENSIVA VERTICAL (NATIVE FLUID PORTRAIT)
+   Escopo: Apenas tablets em pé e smartphones (max-width: 1023px)
+   Efeito: Deixa os cards esticarem na largura total nativa sem esmagar o conteúdo
    ========================================================================= */
 @media (max-width: 1023px) {
-  /* 16a. TETOS NOMINAIS DE LUXO: Limita a expansão e centraliza a estrutura */
-  .tab-content .hero-card-crystal,
-  .tab-content .opportunity-card-obsidian,
-  .tab-content .wesus-controls-group,
-  aside.grid-cols-2 {
-    max-width: 560px !important;
-    width: 100% !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
+  /* ✔ REMOVIDAS AS TRAVAS DE 560PX: Os cards voltam a ocupar a largura fluida original */
 
-  /* Alinhamento de cabeçalhos com o teto dos cards */
-  .tab-content > header,
-  .tab-content .contracts-nav-wrapper,
-  .tab-content .subsection-header-bar {
-    max-width: 560px !important;
-    width: 100% !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
-  /* 16b. BLINDAGEM DOS MINI-WIDGETS (Taxa e Tempo Restante) */
+  /* 16a. ALINHAMENTO E CORREÇÃO DOS MINI-WIDGETS (Taxa e Tempo Restante) */
   aside .hero-card-crystal {
     min-height: 155px !important;
     height: 100% !important;
     padding: 1.25rem !important;
   }
 
-  /* CORREÇÃO DO ENGENHO: Neutraliza as margens negativas do HTML que esmagavam os cards */
+  /* Neutraliza as antigas margens negativas do HTML para o cronômetro respirar */
   aside .hero-card-crystal > div:first-child {
     margin-top: 0 !important;
     margin-bottom: 0.5rem !important;
     padding-bottom: 0.5rem !important;
   }
 
-  /* Reduz sutilmente o diâmetro do cronômetro para encaixar como luva no grid dual */
+  /* Calibra o diâmetro do cronômetro para o toque sem quebrar o layout */
   aside .relative.w-28.h-28 {
-    width: 5.5rem !important;
-    height: 5.5rem !important;
+    width: 6.5rem !important;
+    height: 6.5rem !important;
     margin-top: 0 !important;
   }
 
-  aside .relative.w-28.h-28 select-all {
-    font-size: 1.5rem !important;
-  }
-
-  /* 16c. COLO DO CONTÊINER VERTICAL: Garante folga total contra a barra do sistema */
+  /* 16b. COLO DO CONTÊINER VERTICAL: Mantém a folga total de segurança contra a barra */
   #tab-dashboard,
   #tab-documentos,
   #tab-conta,
