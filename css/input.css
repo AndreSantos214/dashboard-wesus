@@ -2503,40 +2503,54 @@ html.dark body {
 }
 
 /* =========================================================================
-   BLOCO 16 — ADAPTAÇÃO COMPREENSIVA VERTICAL (NATIVE FLUID PORTRAIT)
-   Escopo: Apenas tablets em pé e smartphones (max-width: 1023px)
-   Efeito: Deixa os cards esticarem na largura total nativa sem esmagar o conteúdo
+   BLOCO 16 (EXTENSÃO) — PURIFICAÇÃO E PERFORMANCE MOBILE & PORTRAIT
+   Escopo: Ativado em qualquer ecrã vertical ou smartphone (max-width: 1023px)
+   Efeito: Desliga o desfoque pesado e ativa pré-rasterização na GPU portátil
    ========================================================================= */
 @media (max-width: 1023px) {
-  /* ✔ REMOVIDAS AS TRAVAS DE 560PX: Os cards voltam a ocupar a largura fluida original */
+  section[aria-labelledby="patrimonyHeading"] .hero-card-crystal,
+  section[aria-label="Oportunidades Exclusivas"] .hero-card-crystal,
+  section[aria-label="Desempenho Anual"] .hero-card-crystal,
+  .hero-card-crystal {
+    /* ✔ ACELERAÇÃO MÓVEL: Força os cards para a thread independente da GPU */
+    will-change: transform, opacity !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
 
-  /* 16a. ALINHAMENTO E CORREÇÃO DOS MINI-WIDGETS (Taxa e Tempo Restante) */
-  aside .hero-card-crystal {
-    min-height: 155px !important;
-    height: 100% !important;
-    padding: 1.25rem !important;
+    /* ✔ DETOX GRÁFICO: Mata o desfoque que quebrava os frames no telemóvel e tablet */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    /* Base sólida de pintura direta super veloz */
+    border: 2.2px solid transparent !important;
+    background:
+      linear-gradient(
+          135deg,
+          rgba(11, 31, 58, 0.96),
+          rgba(7, 19, 38, 0.98) 50%,
+          rgba(11, 31, 58, 0.95)
+        )
+        padding-box,
+      linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.35) 0%,
+          rgba(255, 255, 255, 0.05) 35%,
+          rgba(197, 160, 89, 0.15) 70%,
+          rgba(232, 208, 141, 0.4) 100%
+        )
+        border-box !important;
+
+    /* Sombra embutida leve para dar volume sem pesar na renderização */
+    box-shadow:
+      0 20px 45px -12px rgba(0, 0, 0, 0.75),
+      0 0 30px rgba(197, 160, 89, 0.08) !important;
   }
 
-  /* Neutraliza as antigas margens negativas do HTML para o cronômetro respirar */
-  aside .hero-card-crystal > div:first-child {
-    margin-top: 0 !important;
-    margin-bottom: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
-  }
-
-  /* Calibra o diâmetro do cronômetro para o toque sem quebrar o layout */
-  aside .relative.w-28.h-28 {
-    width: 6.5rem !important;
-    height: 6.5rem !important;
-    margin-top: 0 !important;
-  }
-
-  /* 16b. COLO DO CONTÊINER VERTICAL: Mantém a folga total de segurança contra a barra */
-  #tab-dashboard,
-  #tab-documentos,
-  #tab-conta,
-  #tab-oportunidades,
-  #tab-suporte {
-    padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
+  /* ✔ PRE-RENDERIZAÇÃO DE SCROLL: Prepara o esqueleto das seções antes do dedo arrastar */
+  section[aria-label="Oportunidades Exclusivas"],
+  section[aria-label="Desempenho Anual"],
+  section[aria-labelledby="assetsHeading"] {
+    content-visibility: auto !important;
+    contain-intrinsic-size: auto 400px !important;
   }
 }
