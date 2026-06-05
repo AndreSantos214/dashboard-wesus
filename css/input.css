@@ -2531,3 +2531,13 @@ html.dark body {
     scroll-padding-left: 1.5rem !important;
   }
 }
+
+/* =========================================================================
+   BLOCO 17 — BLINDAGEM DE RASTERIZAÇÃO PARA O PARALAXE DO GIROSCÓPIO
+   ========================================================================= */
+.hero-card-crystal {
+  /* Isola o contêiner em uma camada própria de hardware estável */
+  will-change: transform !important;
+  transform-style: preserve-3d !important;
+  -webkit-transform-style: preserve-3d !important;
+}

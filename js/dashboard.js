@@ -138,58 +138,104 @@ const NavigationController = (() => {
   }
 })();
 
-/* ── SCROLL CONTROLLER (PURE GPU GYRO TILT ENGINE) ────────── */
+/* ── SCROLL CONTROLLER (PURE GPU GYRO TILT ENGINE UPGRADED) ────────── */
 const ScrollController = (() => {
-  function init() {
-    // ✔ TRAVA CIRÚRGICA: Aborta o giroscópio se for dispositivo tátil ou tela menor que desktop
-    const isTouchOrTablet =
-      window.matchMedia("(pointer: coarse)").matches ||
-      navigator.maxTouchPoints > 0 ||
-      window.innerWidth < 1024;
-    if (isTouchOrTablet) return;
+  const STORAGE_KEY = "wesus-gyro-tilt";
+  let isGyroEnabled = true;
+  let hasListener = false;
+  let ticking = false;
 
+  function updateCardTilt(event, crystalCards) {
+    if (event.gamma === null || event.beta === null) return;
+
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        if (!isGyroEnabled) {
+          ticking = false;
+          return;
+        }
+        // Calibração milimétrica dos eixos de rotação da marca
+        const tiltX = Math.max(-7, Math.min(7, event.gamma * 0.22));
+        const tiltY = Math.max(-7, Math.min(7, (event.beta - 55) * 0.22));
+
+        crystalCards.forEach((card) => {
+          card.style.transform = `perspective(1000px) translateZ(0) rotateX(${-tiltY}deg) rotateY(${tiltX}deg)`;
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  function resetTransforms() {
+    document.querySelectorAll(".hero-card-crystal").forEach((card) => {
+      card.style.transform = ""; // Limpa os inline styles instantaneamente sem piscar
+    });
+  }
+
+  function activateSensors() {
+    if (!isGyroEnabled) return;
     const crystalCards = document.querySelectorAll(".hero-card-crystal");
     if (crystalCards.length === 0) return;
 
-    let ticking = false;
-    function handleOrientation(event) {
-      if (event.gamma === null || event.beta === null) return;
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const tiltX = Math.max(-6, Math.min(6, event.gamma * 0.2));
-          const tiltY = Math.max(-6, Math.min(6, (event.beta - 55) * 0.2));
-          crystalCards.forEach((card) => {
-            card.style.transform = `perspective(1000px) translateZ(0) rotateX(${-tiltY}deg) rotateY(${tiltX}deg)`;
-          });
-          ticking = false;
-        });
-        ticking = true;
-      }
+    if (
+      typeof DeviceOrientationEvent !== "undefined" &&
+      typeof DeviceOrientationEvent.requestPermission === "function"
+    ) {
+      DeviceOrientationEvent.requestPermission()
+        .then((state) => {
+          if (state === "granted" && !hasListener) {
+            window.addEventListener(
+              "deviceorientation",
+              (e) => updateCardTilt(e, crystalCards),
+              true,
+            );
+            hasListener = true;
+          }
+        })
+        .catch(console.error);
+    } else if (!hasListener) {
+      window.addEventListener(
+        "deviceorientation",
+        (e) => updateCardTilt(e, crystalCards),
+        true,
+      );
+      hasListener = true;
     }
+  }
 
-    function activateSensors() {
-      if (
-        typeof DeviceOrientationEvent !== "undefined" &&
-        typeof DeviceOrientationEvent.requestPermission === "function"
-      ) {
-        DeviceOrientationEvent.requestPermission()
-          .then((state) => {
-            if (state === "granted")
-              window.addEventListener(
-                "deviceorientation",
-                handleOrientation,
-                true,
-              );
-          })
-          .catch(console.error);
+  function setupToggle() {
+    const toggleInput = document.getElementById("wesusGyroToggle");
+    if (!toggleInput) return;
+
+    // Lendo o estado salvo (Ativado por padrão se estiver vazio)
+    const storedSetting = localStorage.getItem(STORAGE_KEY);
+    isGyroEnabled = storedSetting !== "false";
+    toggleInput.checked = isGyroEnabled;
+
+    if (!isGyroEnabled) resetTransforms();
+
+    toggleInput.addEventListener("change", (e) => {
+      isGyroEnabled = e.target.checked;
+      localStorage.setItem(STORAGE_KEY, isGyroEnabled ? "true" : "false");
+
+      if (!isGyroEnabled) {
+        resetTransforms();
       } else {
-        window.addEventListener("deviceorientation", handleOrientation, true);
+        activateSensors();
       }
-    }
+    });
+  }
+
+  function init() {
+    setupToggle();
+
+    // Ativação por intenção de clique para respeitar as políticas de segurança dos browsers mobile
     document.addEventListener("click", activateSensors, { once: true });
     document.addEventListener("touchstart", activateSensors, { once: true });
   }
-  return { init };
+
+  return { init, activateSensors };
 })();
 
 /* ── BALANCE VISIBILITY TOGGLE ────────────────────────────── */
