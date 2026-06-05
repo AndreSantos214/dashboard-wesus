@@ -2454,23 +2454,31 @@ html.dark body {
     z-index: 2 !important;
   }
 
-  /* 🔥 15e. ANTI-SOLUÇO DE SCROLL: Força a GPU a pré-renderizar as seções de baixo */
+  /* 🔥 15e. RECUPERAÇÃO DAS SOMBRAS: Transforma margem em padding para evitar o corte do isolamento */
   section[aria-label="Oportunidades Exclusivas"],
   section[aria-label="Desempenho Anual"],
   section[aria-labelledby="assetsHeading"] {
-    content-visibility: auto !important; /* Calcula o esqueleto do bloco antes do scroll chegar ali */
-    contain-intrinsic-size: auto 300px !important; /* Reserva o espaço na memória para evitar pulos */
+    content-visibility: auto !important;
+    contain-intrinsic-size: auto 400px !important;
     will-change: transform !important;
-    transform: translateZ(
-      0
-    ) !important; /* Garante que nasçam na camada 3D estável */
+    transform: translateZ(0) !important;
+
+    /* Zera a margem de colisão e usa padding para expandir a caixa interna.
+       Isso faz com que as sombras heráldicas apareçam completas e deem profundidade! */
+    margin-top: 2rem !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 60px !important;
   }
 
-  /* 🔥 15f. ESTABILIZAÇÃO DO CONTÊINER: Otimiza a linha de rolagem do painel principal */
+  /* 🔥 15f. ANTI-SOBREPOSIÇÃO: Força o contêiner a flutuar acima da barra do sistema do Tablet */
   #mainContent {
     scroll-behavior: smooth !important;
     overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important; /* Ativa a física de scroll fluido nativa do iOS/iPadOS */
-    will-change: scroll-position !important; /* Avisa o navegador para otimizar a thread de scroll */
+    -webkit-overflow-scrolling: touch !important;
+    will-change: scroll-position !important;
+
+    /* Injeta um recuo generoso somado à safe area do dispositivo. 
+       Garante que o carrossel e o rodapé terminem antes dos botões de voltar/minimizar! */
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom)) !important;
   }
 }
