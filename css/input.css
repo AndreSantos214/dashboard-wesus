@@ -2479,7 +2479,7 @@ html.dark body {
 
     /* Injeta um recuo generoso somado à safe area do dispositivo. 
        Garante que o carrossel e o rodapé terminem antes dos botões de voltar/minimizar! */
-    padding-bottom: calc(6rem + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(9rem + env(safe-area-inset-bottom)) !important;
   }
 
   .sidebar {
@@ -2503,25 +2503,23 @@ html.dark body {
 }
 
 /* =========================================================================
-   BLOCO 16 — ADAPTAÇÃO PARA TABLET VERTICAL / MOBILE LARGO (PORTRAIT SHIELD)
-   Escopo: Telas até 1023px (Tablets em pé e Smartphones largos)
-   Efeito: Limita o esticamento dos cards e blinda a rolagem de todas as abas
+   BLOCO 16 (REESCRITO) — ADAPTAÇÃO COMPLETA PORTRAIT (TABLET VERTICAL)
    ========================================================================= */
 @media (max-width: 1023px) {
   /* 16a. TETOS NOMINAIS DE LUXO: Limita a expansão e centraliza a estrutura */
   .tab-content .hero-card-crystal,
   .tab-content .opportunity-card-obsidian,
-  .tab-content .wesus-controls-group {
-    max-width: 560px !important; /* Mantém a proporção áurea perfeita de um app de elite */
+  .tab-content .wesus-controls-group,
+  aside.grid-cols-2 {
+    max-width: 560px !important;
     width: 100% !important;
     margin-left: auto !important;
     margin-right: auto !important;
   }
 
-  /* Faz com que os cabeçalhos das páginas e menus alinhem com a largura dos cards */
+  /* Alinhamento de cabeçalhos com o teto dos cards */
   .tab-content > header,
   .tab-content .contracts-nav-wrapper,
-  .tab-content .flex-items-center-justify-between,
   .tab-content .subsection-header-bar {
     max-width: 560px !important;
     width: 100% !important;
@@ -2529,12 +2527,37 @@ html.dark body {
     margin-right: auto !important;
   }
 
-  /* 16b. COLO DO CONTÊINER: Margem de segurança inferior para as abas secundárias */
+  /* 16b. BLINDAGEM DOS MINI-WIDGETS (Taxa e Tempo Restante) */
+  aside .hero-card-crystal {
+    min-height: 155px !important;
+    height: 100% !important;
+    padding: 1.25rem !important;
+  }
+
+  /* CORREÇÃO DO ENGENHO: Neutraliza as margens negativas do HTML que esmagavam os cards */
+  aside .hero-card-crystal > div:first-child {
+    margin-top: 0 !important;
+    margin-bottom: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* Reduz sutilmente o diâmetro do cronômetro para encaixar como luva no grid dual */
+  aside .relative.w-28.h-28 {
+    width: 5.5rem !important;
+    height: 5.5rem !important;
+    margin-top: 0 !important;
+  }
+
+  aside .relative.w-28.h-28 select-all {
+    font-size: 1.5rem !important;
+  }
+
+  /* 16c. COLO DO CONTÊINER VERTICAL: Garante folga total contra a barra do sistema */
+  #tab-dashboard,
   #tab-documentos,
   #tab-conta,
   #tab-oportunidades,
   #tab-suporte {
-    /* Cria um recuo que joga o fim da página acima da barra tátil flutuante do sistema */
-    padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
   }
 }
