@@ -2490,4 +2490,14 @@ html.dark body {
     flex-direction: column !important;
     justify-content: space-between !important;
   }
+
+  .sidebar > div:last-child {
+    /* Transforma o recuo de segurança em margem de afastamento ascendente */
+    margin-bottom: calc(55px + env(safe-area-inset-bottom)) !important;
+
+    /* Cria um efeito de micro-âncora flutuante de vidro */
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4) !important;
+    border-radius: 1rem !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
 }
