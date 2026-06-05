@@ -2350,28 +2350,12 @@ html.dark body {
 }
 
 /* =========================================================================
-   BLOCO 15 — CORREÇÃO CIRÚRGICA DO CARROSSEL EM AMBIENTES MÓVEIS (PORTRAIT)
-   Escopo: Atua apenas abaixo de 1024px (Telemóveis e Tablet em pé)
-   Garante 100% da performance original que já tinhas no Capacitor!
-   ========================================================================= */
-@media (max-width: 1023px) {
-  /* Alinha o primeiro card do carrossel perfeitamente com a margem esquerda (image_d01b2e.png) */
-  .assets-carousel {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-    scroll-padding-left: 1rem !important;
-  }
-}
-
-/* =========================================================================
-   BLOCO 16 — ESCUDO EXCLUSIVO: TABLET HORIZONTAL (LANDSCAPE TOUCH)
-   Escopo: Ativa apenas em telas grandes (>= 1024px) que possuam tela tátil
-   Zero interferência no Mobile ou no Tablet Vertical!
+   BLOCO 15 — ESCUDO EXCLUSIVO: TABLET HORIZONTAL (LANDSCAPE TOUCH ONLY)
+   Escopo: Ativa apenas em telas grandes (>= 1024px) que possuam tela tátil.
+   Zero interferência no Mobile ou no Tablet Vertical (Portrait)!
    ========================================================================= */
 @media (min-width: 1024px) and (pointer: coarse) {
-  /* 16a. Extinção de Orbs e Blurs dinâmicos por software que geravam lag na folha */
+  /* 15a. Extinção de Orbs e Blurs dinâmicos por software que geravam lag na folha */
   .glow-orb,
   .hero-card-backlight,
   .widget-card-backlight,
@@ -2384,7 +2368,7 @@ html.dark body {
     filter: none !important;
   }
 
-  /* 16b. Otimização de pintura estável 2D acelerada por hardware para os cards */
+  /* 15b. Otimização de pintura estável 2D acelerada por hardware para os cards */
   section[aria-labelledby="patrimonyHeading"] .hero-card-crystal,
   section[aria-label="Oportunidades Exclusivas"] .hero-card-crystal,
   section[aria-label="Desempenho Anual"] .hero-card-crystal,
@@ -2455,7 +2439,7 @@ html.dark body {
     z-index: 2 !important;
   }
 
-  /* 16c. Otimização das Linhas do SVG */
+  /* 15c. Otimização das Linhas do SVG */
   .premium-chart-core-line {
     filter: none !important;
     stroke-width: 2.2 !important;
@@ -2466,7 +2450,7 @@ html.dark body {
     filter: none !important;
   }
 
-  /* 16d. Evita o corte de sombras causados pelo renderizador em lote */
+  /* 15d. Evita o corte de sombras causados pelo renderizador em lote */
   section[aria-label="Oportunidades Exclusivas"],
   section[aria-label="Desempenho Anual"],
   section[aria-labelledby="assetsHeading"] {
@@ -2475,14 +2459,14 @@ html.dark body {
     padding-bottom: 40px !important;
   }
 
-  /* 16e. Injeta folga na barra lateral para o perfil voar acima da barra de navegação (image_d1774d.jpg) */
+  /* 15e. Injeta folga na barra lateral para o perfil voar acima da barra de navegação */
   .sidebar > div:last-child {
     margin-bottom: calc(65px + env(safe-area-inset-bottom)) !important;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4) !important;
     border-radius: 1rem !important;
   }
 
-  /* 16f. Injeta folga no scroll do conteúdo principal para livrar as tabelas e rodapés da barra do sistema */
+  /* 15f. Injeta folga no scroll do conteúdo principal para livrar as tabelas e rodapés da barra do sistema */
   #mainContent {
     scroll-behavior: smooth !important;
     overflow-y: auto !important;
