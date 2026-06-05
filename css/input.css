@@ -2350,9 +2350,9 @@ html.dark body {
 }
 
 /* =========================================================================
-   BLOCO 15 — DESAFIO DO TABLET HORIZONTAL (TOUCH DESKTOP BREAKPOINT FIX - ULTRA CLEAN)
+   BLOCO 15 — DESAFIO DO TABLET HORIZONTAL (TOUCH DESKTOP BREAKPOINT FIX - V3 ULTRA PERFORMANCE)
    Escopo: Apenas tablets na orientação horizontal (>= 1024px com pointer: coarse)
-   Efeito: Remove orbs/backlights traseiros e simula a luz diretamente no corpo do card
+   Efeito: Remove orbs traseiros, simula luz no card e otimiza a renderização gráfica do SVG
    ========================================================================= */
 @media (min-width: 1024px) and (pointer: coarse) {
   /* 15a. Extinção total de orbs globais e luzes absolutas por trás dos cards */
@@ -2402,7 +2402,7 @@ html.dark body {
         )
         border-box !important;
 
-    /* 🔥 A MÁGICA: Sombra projetada com aura dourada externa + difusão interna premium */
+    /* Sombra projetada com aura dourada externa + difusão interna premium */
     box-shadow:
       0 30px 60px -15px rgba(0, 0, 0, 0.85),
       0 0 35px rgba(197, 160, 89, 0.14),
@@ -2419,13 +2419,25 @@ html.dark body {
       inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
   }
 
-  /* 15d. Elimina a pseudo-camada de corte complexa de desktops */
+  /* 🛠️ 15d. DETOX DO GRÁFICO SVG: Desliga filtros de desfoque e mix-blend-modes pesados */
+  .premium-chart-core-line {
+    filter: none !important; /* Mata o feGaussianBlur que atrasava a linha */
+    stroke-width: 2.2 !important;
+  }
+
+  .premium-chart-projected-shadow {
+    mix-blend-mode: normal !important; /* Remove o cálculo matemático písel por písel do screen */
+    opacity: 0.18 !important; /* Achata o gradiente em opacidade estática nativa super leve */
+    filter: none !important;
+  }
+
+  /* 15e. Elimina a pseudo-camada de corte complexa de desktops */
   .hero-card-crystal::before {
     display: none !important;
     content: none !important;
   }
 
-  /* 15e. Preserva o reflexo linear estático diagonal discreto por cima do lingote */
+  /* 15f. Preserva o reflexo linear estático diagonal discreto por cima do lingote */
   .hero-card-crystal::after {
     content: "" !important;
     position: absolute !important;
