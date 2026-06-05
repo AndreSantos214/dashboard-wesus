@@ -2350,12 +2350,28 @@ html.dark body {
 }
 
 /* =========================================================================
-   BLOCO 15 — DESAFIO DO TABLET HORIZONTAL (TOUCH DESKTOP BREAKPOINT FIX - V3 ULTRA PERFORMANCE)
-   Escopo: Apenas tablets na orientação horizontal (>= 1024px com pointer: coarse)
-   Efeito: Remove orbs traseiros, simula luz no card e otimiza a renderização gráfica do SVG
+   BLOCO 15 — CORREÇÃO CIRÚRGICA DO CARROSSEL EM AMBIENTES MÓVEIS (PORTRAIT)
+   Escopo: Atua apenas abaixo de 1024px (Telemóveis e Tablet em pé)
+   Garante 100% da performance original que já tinhas no Capacitor!
+   ========================================================================= */
+@media (max-width: 1023px) {
+  /* Alinha o primeiro card do carrossel perfeitamente com a margem esquerda (image_d01b2e.png) */
+  .assets-carousel {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    scroll-padding-left: 1rem !important;
+  }
+}
+
+/* =========================================================================
+   BLOCO 16 — ESCUDO EXCLUSIVO: TABLET HORIZONTAL (LANDSCAPE TOUCH)
+   Escopo: Ativa apenas em telas grandes (>= 1024px) que possuam tela tátil
+   Zero interferência no Mobile ou no Tablet Vertical!
    ========================================================================= */
 @media (min-width: 1024px) and (pointer: coarse) {
-  /* 15a. Extinção total de orbs globais e luzes absolutas por trás dos cards */
+  /* 16a. Extinção de Orbs e Blurs dinâmicos por software que geravam lag na folha */
   .glow-orb,
   .hero-card-backlight,
   .widget-card-backlight,
@@ -2368,22 +2384,20 @@ html.dark body {
     filter: none !important;
   }
 
-  /* 15b. Otimização de pintura e simulação de luz embutida no contêiner do card */
+  /* 16b. Otimização de pintura estável 2D acelerada por hardware para os cards */
   section[aria-labelledby="patrimonyHeading"] .hero-card-crystal,
   section[aria-label="Oportunidades Exclusivas"] .hero-card-crystal,
   section[aria-label="Desempenho Anual"] .hero-card-crystal,
   .hero-card-crystal {
     will-change: transform, opacity !important;
-    transform: translateZ(0) !important; /* Estabilização 2D por hardware */
+    transform: translateZ(0) !important;
     backface-visibility: hidden !important;
     perspective: 1000px !important;
     overflow: hidden !important;
-
-    /* Desliga o desfoque de fundo dinâmico para eliminar o efeito de carregamento atrasado */
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 
-    /* Base planar sólida de altíssimo luxo */
+    /* Base sólida luxuosa */
     border: 2.2px solid transparent !important;
     background:
       linear-gradient(
@@ -2402,42 +2416,29 @@ html.dark body {
         )
         border-box !important;
 
-    /* Sombra projetada com aura dourada externa + difusão interna premium */
+    /* Sombra simulada estável para devolver a profundidade sem quebrar o processamento */
     box-shadow:
       0 30px 60px -15px rgba(0, 0, 0, 0.85),
-      0 0 35px rgba(197, 160, 89, 0.14),
+      0 0 35px rgba(197, 160, 89, 0.15),
       inset 0 0 25px rgba(197, 160, 89, 0.06),
       inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
   }
 
-  /* 15c. Realce de iluminação embutida específico para o card em destaque (6 Meses) */
+  /* Realce tridimensional para o plano em destaque */
   .plan-card-featured {
     box-shadow:
       0 30px 60px -15px rgba(0, 0, 0, 0.9),
       0 0 45px rgba(197, 160, 89, 0.22),
-      inset 0 0 30px rgba(197, 160, 89, 0.1),
-      inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+      inset 0 0 30px rgba(197, 160, 89, 0.1) !important;
   }
 
-  /* 🛠️ 15d. DETOX DO GRÁFICO SVG: Desliga filtros de desfoque e mix-blend-modes pesados */
-  .premium-chart-core-line {
-    filter: none !important; /* Mata o feGaussianBlur que atrasava a linha */
-    stroke-width: 2.2 !important;
-  }
-
-  .premium-chart-projected-shadow {
-    mix-blend-mode: normal !important; /* Remove o cálculo matemático písel por písel do screen */
-    opacity: 0.18 !important; /* Achata o gradiente em opacidade estática nativa super leve */
-    filter: none !important;
-  }
-
-  /* 15e. Elimina a pseudo-camada de corte complexa de desktops */
+  /* Desliga a máscara pesada de computadores */
   .hero-card-crystal::before {
     display: none !important;
     content: none !important;
   }
 
-  /* 15f. Preserva o reflexo linear estático diagonal discreto por cima do lingote */
+  /* Reflexo linear diagonal leve */
   .hero-card-crystal::after {
     content: "" !important;
     position: absolute !important;
@@ -2454,110 +2455,38 @@ html.dark body {
     z-index: 2 !important;
   }
 
-  /* 🔥 15e. RECUPERAÇÃO DAS SOMBRAS: Transforma margem em padding para evitar o corte do isolamento */
+  /* 16c. Otimização das Linhas do SVG */
+  .premium-chart-core-line {
+    filter: none !important;
+    stroke-width: 2.2 !important;
+  }
+  .premium-chart-projected-shadow {
+    mix-blend-mode: normal !important;
+    opacity: 0.18 !important;
+    filter: none !important;
+  }
+
+  /* 16d. Evita o corte de sombras causados pelo renderizador em lote */
   section[aria-label="Oportunidades Exclusivas"],
   section[aria-label="Desempenho Anual"],
   section[aria-labelledby="assetsHeading"] {
-    content-visibility: auto !important;
-    contain-intrinsic-size: auto 400px !important;
-    will-change: transform !important;
-    transform: translateZ(0) !important;
-
-    /* Zera a margem de colisão e usa padding para expandir a caixa interna.
-       Isso faz com que as sombras heráldicas apareçam completas e deem profundidade! */
-    margin-top: 2rem !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 60px !important;
+    content-visibility: visible !important; /* Pré-carga total sem atrasos */
+    margin-top: 2.5rem !important;
+    padding-bottom: 40px !important;
   }
 
-  /* 🔥 15f. ANTI-SOBREPOSIÇÃO: Força o contêiner a flutuar acima da barra do sistema do Tablet */
+  /* 16e. Injeta folga na barra lateral para o perfil voar acima da barra de navegação (image_d1774d.jpg) */
+  .sidebar > div:last-child {
+    margin-bottom: calc(65px + env(safe-area-inset-bottom)) !important;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4) !important;
+    border-radius: 1rem !important;
+  }
+
+  /* 16f. Injeta folga no scroll do conteúdo principal para livrar as tabelas e rodapés da barra do sistema */
   #mainContent {
     scroll-behavior: smooth !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
-    will-change: scroll-position !important;
-
-    /* Injeta um recuo generoso somado à safe area do dispositivo. 
-       Garante que o carrossel e o rodapé terminem antes dos botões de voltar/minimizar! */
-    padding-bottom: calc(9rem + env(safe-area-inset-bottom)) !important;
-  }
-
-  .sidebar {
-    padding-bottom: calc(50px + env(safe-area-inset-bottom)) !important;
-
-    /* Garante que o container interno redistribua o espaço de forma amanteigada */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-  }
-
-  .sidebar > div:last-child {
-    /* Transforma o recuo de segurança em margem de afastamento ascendente */
-    margin-bottom: calc(55px + env(safe-area-inset-bottom)) !important;
-
-    /* Cria um efeito de micro-âncora flutuante de vidro */
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4) !important;
-    border-radius: 1rem !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
-  }
-}
-
-/* =========================================================================
-   BLOCO 16 — ADAPTAÇÃO COMPREENSIVA VERTICAL & MOBILE HIGH-PERFORMANCE
-   Escopo: Ativado em qualquer ecrã vertical ou smartphone (max-width: 1023px)
-   Efeito: Pré-renderização total antecipada + Alinhamento do Carrossel
-   ========================================================================= */
-@media (max-width: 1023px) {
-  /* 16a. FORÇA PRÉ-CARREGAMENTO GRÁFICO (Fim do delay fora da tela inicial) */
-  section[aria-label="Oportunidades Exclusivas"],
-  section[aria-label="Desempenho Anual"],
-  section[aria-labelledby="assetsHeading"] {
-    /* Força o navegador a calcular e pintar toda a estrutura de imediato no load */
-    content-visibility: visible !important;
-
-    /* Envia o peso da página mastigado para a linha de processamento da GPU */
-    will-change: transform, opacity !important;
-    transform: translateZ(0) !important;
-  }
-
-  /* 16b. CORREÇÃO DO CARROSSEL (image_d01b2e.png): Alinha o primeiro card com a tela */
-  .assets-carousel {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 1rem !important; /* Alinha visualmente com os títulos do app */
-    padding-right: 1rem !important;
-    scroll-padding-left: 1rem !important; /* Trava o ponto magnético do toque no lugar certo */
-  }
-
-  /* 16c. REGRAS FLUIDAS DOS MINI-WIDGETS (Taxa e Tempo Restante) */
-  aside .hero-card-crystal {
-    min-height: 155px !important;
-    height: 100% !important;
-    padding: 1.25rem !important;
-    will-change: transform !important;
-    transform: translateZ(0) !important;
-  }
-
-  /* Neutraliza as antigas margens negativas do HTML para o cronômetro respirar */
-  aside .hero-card-crystal > div:first-child {
-    margin-top: 0 !important;
-    margin-bottom: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
-  }
-
-  /* Calibra o diâmetro do cronômetro para o toque sem quebrar o layout */
-  aside .relative.w-28.h-28 {
-    width: 6.5rem !important;
-    height: 6.5rem !important;
-    margin-top: 0 !important;
-  }
-
-  /* 16d. COLO DO CONTÊINER VERTICAL: Mantém a folga total de segurança contra a barra */
-  #tab-dashboard,
-  #tab-documentos,
-  #tab-conta,
-  #tab-oportunidades,
-  #tab-suporte {
-    padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(10rem + env(safe-area-inset-bottom)) !important;
   }
 }
