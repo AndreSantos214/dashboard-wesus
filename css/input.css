@@ -2453,4 +2453,24 @@ html.dark body {
     pointer-events: none !important;
     z-index: 2 !important;
   }
+
+  /* 🔥 15e. ANTI-SOLUÇO DE SCROLL: Força a GPU a pré-renderizar as seções de baixo */
+  section[aria-label="Oportunidades Exclusivas"],
+  section[aria-label="Desempenho Anual"],
+  section[aria-labelledby="assetsHeading"] {
+    content-visibility: auto !important; /* Calcula o esqueleto do bloco antes do scroll chegar ali */
+    contain-intrinsic-size: auto 300px !important; /* Reserva o espaço na memória para evitar pulos */
+    will-change: transform !important;
+    transform: translateZ(
+      0
+    ) !important; /* Garante que nasçam na camada 3D estável */
+  }
+
+  /* 🔥 15f. ESTABILIZAÇÃO DO CONTÊINER: Otimiza a linha de rolagem do painel principal */
+  #mainContent {
+    scroll-behavior: smooth !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important; /* Ativa a física de scroll fluido nativa do iOS/iPadOS */
+    will-change: scroll-position !important; /* Avisa o navegador para otimizar a thread de scroll */
+  }
 }
